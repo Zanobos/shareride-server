@@ -13,20 +13,15 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 
 		<checkstyle.skip>true</checkstyle.skip>
-		
-		<appengine.app.version>1</appengine.app.version>
-		<appengine.target.version>1.9.53</appengine.target.version>
-		<appengine-maven.version>1.3.1</appengine-maven.version>
-		
 		<objectify.version>5.1.17</objectify.version>
-        <gson.version>2.7</gson.version>
-        <guava.version>20.0</guava.version>
-        <google-api.version>1.21.0</google-api.version>
-        <junit.version>4.12</junit.version>
-        <glassfish-jersey.version>2.25.1</glassfish-jersey.version>
-        <firebase-admin-sdk.version>4.1.7</firebase-admin-sdk.version>
-        <javax-ws-rs.version>2.0</javax-ws-rs.version>
-        
+		<gson.version>2.7</gson.version>
+		<guava.version>20.0</guava.version>
+		<google-api.version>1.21.0</google-api.version>
+		<junit.version>4.12</junit.version>
+		<glassfish-jersey.version>2.25.1</glassfish-jersey.version>
+		<firebase-admin-sdk.version>4.1.7</firebase-admin-sdk.version>
+		<javax-ws-rs.version>2.0</javax-ws-rs.version>
+		<graphopper.api.version>0.9.0</graphopper.api.version>
 	</properties>
 
 	<dependencies>
@@ -72,7 +67,12 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.graphhopper</groupId>
+			<artifactId>directions-api-client</artifactId>
+			<version>${graphopper.api.version}</version>
+		</dependency>
+
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
