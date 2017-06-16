@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+
 @Path("/forcesService")
 public class MainService {
 
@@ -22,6 +23,7 @@ public class MainService {
 
 		log.log(Level.INFO, "doService");
 
+		VrpApi vrpApi = new VrpApi();
 		return request;
 	}
 
