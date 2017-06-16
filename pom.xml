@@ -102,11 +102,6 @@
 					</webResources>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>${appengine-maven.version}</version>
-			</plugin>
 		</plugins>
 	</build>
 </project>
