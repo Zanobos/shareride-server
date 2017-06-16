@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>war</packaging>
+	<version>1.0</version>
+
+	<groupId>it.zano</groupId>
+	<artifactId>ShareRideServer</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+
+		<checkstyle.skip>true</checkstyle.skip>
+		
+		<appengine.app.version>1</appengine.app.version>
+		<appengine.target.version>1.9.53</appengine.target.version>
+		<appengine-maven.version>1.3.1</appengine-maven.version>
+		
+		<objectify.version>5.1.17</objectify.version>
+        <gson.version>2.7</gson.version>
+        <guava.version>20.0</guava.version>
+        <google-api.version>1.21.0</google-api.version>
+        <junit.version>4.12</junit.version>
+        <glassfish-jersey.version>2.25.1</glassfish-jersey.version>
+        <firebase-admin-sdk.version>4.1.7</firebase-admin-sdk.version>
+        <javax-ws-rs.version>2.0</javax-ws-rs.version>
+        
+	</properties>
+
+	<dependencies>
+		<!-- Compile/runtime dependencies -->
+
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>${javax-ws-rs.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>${firebase-admin-sdk.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${glassfish-jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${glassfish-jersey.version}</version>
+		</dependency>
+		<!-- Because the firebase sdk does not work on GAE.. -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>${objectify.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<archiveClasses>true</archiveClasses>
+					<webResources>
+						<!-- in order to interpolate version from pom into appengine-web.xml -->
+						<resource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<filtering>true</filtering>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
