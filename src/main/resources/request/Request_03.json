@@ -1,0 +1,117 @@
+{
+  "vehicles": [
+    {
+      "vehicle_id": "van1",
+      "start_address": {
+        "location_id": "depot",
+        "lon": 45.073786,
+        "lat": 7.70561
+      },
+      "type_id": "van"
+    }
+  ],
+  "vehicle_types": [
+    {
+      "type_id": "van",
+      "profile": "small_truck",
+      "capacity": [
+        8
+      ]
+    }
+  ],
+  "shipments": [
+    {
+      "id": "shipment1",
+      "name": "signoraAnziana",
+      "pickup": {
+        "address": {
+          "location_id": "signoraAnzianaCasa",
+          "name": "Corso Regina Margherita 229",
+          "lon": 45.08423,
+          "lat": 7.660431
+        },
+        "duration": 20
+      },
+      "delivery": {
+        "address": {
+          "location_id": "portaPalazzo",
+          "name": "Porta Palazzo",
+          "lon": 45.077136,
+          "lat": 7.681825
+        },
+        "duration": 20,
+        "time_windows": [
+          {
+            "earliest": 0,
+            "latest": 600
+          }
+        ]
+      },
+      "size": [
+        1
+      ]
+    },
+    {
+      "id": "shipment2",
+      "name": "MammaConDueFigli",
+      "pickup": {
+        "address": {
+          "location_id": "MammaConDueFigliCasa",
+          "name": "Via Antonio Cecchi 40",
+          "lon": 45.086891,
+          "lat": 7.681241
+        },
+        "duration": 40
+      },
+      "delivery": {
+        "address": {
+          "location_id": "piscinaSospello",
+          "name": "Via Sospello, 117C",
+          "lon": 45.102947,
+          "lat": 7.675446
+        },
+        "duration": 40,
+        "time_windows": [
+          {
+            "earliest": 0,
+            "latest": 1200
+          }
+        ]
+      },
+      "size": [
+        3
+      ]
+    },
+    {
+      "id": "shipment3",
+      "name": "ritorno a casa di mamma",
+      "pickup": {
+        "address": {
+          "location_id": "piscinaSospello",
+          "name": "Via Sospello, 117C",
+          "lon": 45.102947,
+          "lat": 7.675446
+        },
+        "duration": 20
+      },
+      "delivery": {
+        "address": {
+          "location_id": "MammaConDueFigliCasa",
+          "name": "Via Antonio Cecchi 40",
+          "lon": 45.086891,
+          "lat": 7.681241
+        },
+        "duration": 20,
+        "time_windows": [
+          {
+            "earliest": 0,
+            "latest": 1800
+          }
+        ]
+      },
+      "size": [
+        1
+      ]
+    }
+  ]
+}

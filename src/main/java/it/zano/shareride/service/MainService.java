@@ -3,9 +3,11 @@ package it.zano.shareride.service;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.graphhopper.directions.api.client.api.SolutionApi;
@@ -26,14 +28,14 @@ public class MainService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/testService")
-	public Response testService() throws Exception {
+	public Response testService(
+			@QueryParam("requestNumber") @DefaultValue("01")String requestNumber) throws Exception {
 
-		log.log(Level.INFO, "doService");
+		log.log(Level.INFO, "testService");
 
 		VrpApi vrpApi = new VrpApi();
 
-//		Request body = TestRequestUtils.createRequest();
-		Request body = TestRequestUtils.createRequest("01");
+		Request body = TestRequestUtils.createRequest(requestNumber);
 		JobId jobId = vrpApi.postVrp(key, body);
 
 		log.log(Level.INFO, body.toString());
