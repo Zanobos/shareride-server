@@ -32,7 +32,8 @@ public class MainService {
 
 		VrpApi vrpApi = new VrpApi();
 
-		Request body = TestRequestUtils.createRequest();
+//		Request body = TestRequestUtils.createRequest();
+		Request body = TestRequestUtils.createRequest("01");
 		JobId jobId = vrpApi.postVrp(key, body);
 
 		log.log(Level.INFO, body.toString());
