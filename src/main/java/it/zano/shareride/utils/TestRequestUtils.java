@@ -14,9 +14,10 @@ import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Service;
 import com.graphhopper.directions.api.client.model.Vehicle;
 
+import it.zano.shareride.base.model.Constants;
+
 public class TestRequestUtils {
 
-	private static final String requestDir = "request/";
 	private static final String suffix = ".json";
 	private static final String baseFile = "Request_";
 	
@@ -26,7 +27,7 @@ public class TestRequestUtils {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		InputStream inputStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream(requestDir + baseFile + number + suffix);
+				.getResourceAsStream(Constants.FileSystem.DIR_REQUESTS + Constants.FileSystem.SEPARATOR + baseFile + number + suffix);
 		Reader reader = new InputStreamReader(inputStream);
 		request = gson.fromJson(reader, Request.class);
 

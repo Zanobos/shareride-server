@@ -1,7 +1,6 @@
-package it.zano.shareride.service;
+package it.zano.shareride.booking.service;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -16,23 +15,22 @@ import com.graphhopper.directions.api.client.model.JobId;
 import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Response;
 
+import it.zano.shareride.utils.PropertiesLoader;
 import it.zano.shareride.utils.TestRequestUtils;
 
-@Path("/mainService")
-public class MainService {
-
-	private static final Logger log = Logger.getLogger(MainService.class.getName());
-
-	private static final String key = "e43da19e-9203-4721-a651-254d12693021";
-
+@Path("/testService")
+public class TestService extends BaseService{
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/testService")
-	public Response testService(
+	@Path("/test")
+	public Response test(
 			@QueryParam("requestNumber") @DefaultValue("01")String requestNumber) throws Exception {
 
 		log.log(Level.INFO, "testService");
 
+		String key = PropertiesLoader.getProperty("graphopper.key");
+		
 		VrpApi vrpApi = new VrpApi();
 
 		Request body = TestRequestUtils.createRequest(requestNumber);
