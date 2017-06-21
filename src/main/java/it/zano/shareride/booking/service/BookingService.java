@@ -14,7 +14,7 @@ import it.zano.shareride.booking.service.utils.BookingEntitiesController;
 import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.RouteDoabilityRequest;
 import it.zano.shareride.optimization.RouteDoabilityResponse;
-import it.zano.shareride.persistence.PersistenceInput;
+import it.zano.shareride.persistence.PreviousRequestInput;
 import it.zano.shareride.persistence.PersistenceController;
 
 @Path("/bookingService")
@@ -33,7 +33,7 @@ public class BookingService extends BaseService {
 		
 		//Load from the db the previous request
 		bookingEntitiesController.setBookingRequest(bookingRequest);
-		PersistenceInput input = bookingEntitiesController.getPersistenceInput();
+		PreviousRequestInput input = bookingEntitiesController.getPreviousRequestInput();
 		List<BookingRequest> previousRequests = persistenceController.getPreviousRequests(input);
 		
 		//Get the new request (calculating lat and lon if we don't know them)

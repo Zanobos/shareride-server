@@ -33,5 +33,10 @@ public class PropertiesLoader {
 		Properties properties = loadProperties();
 		return properties.getProperty(key);
 	}
+	
+	public static Integer getPropertyInt(String key) {
+		String prop = getProperty(key);
+		return Integer.parseInt(prop);
+	}
 
 }

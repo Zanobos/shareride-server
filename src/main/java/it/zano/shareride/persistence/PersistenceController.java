@@ -12,7 +12,7 @@ public class PersistenceController {
 	 * @param input
 	 * @return
 	 */
-	public List<BookingRequest> getPreviousRequests(PersistenceInput input) {
+	public List<BookingRequest> getPreviousRequests(PreviousRequestInput input) {
 		// TODO Auto-generated method stub
 		return null;
 	}

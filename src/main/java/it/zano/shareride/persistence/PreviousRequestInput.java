@@ -5,12 +5,11 @@ import org.joda.time.DateTime;
 
 /**
  * @author Zano
- * TODO
  */
-public class PersistenceInput {
+public class PreviousRequestInput {
 
 	private String areaId;
-	private DateTime date;
+	private DateTime dateTime;
 
 	public String getAreaId() {
 		return areaId;
@@ -20,12 +19,12 @@ public class PersistenceInput {
 		this.areaId = areaId;
 	}
 
-	public DateTime getDate() {
-		return date;
+	public DateTime getDateTime() {
+		return dateTime;
 	}
 
-	public void setDate(DateTime date) {
-		this.date = date;
+	public void setDateTime(DateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 }
