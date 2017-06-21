@@ -8,13 +8,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import it.zano.shareride.base.model.Transport;
 import it.zano.shareride.booking.entities.BookingRequest;
 import it.zano.shareride.booking.entities.BookingResponse;
 import it.zano.shareride.booking.service.utils.BookingEntitiesController;
 import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.RouteDoabilityRequest;
 import it.zano.shareride.optimization.RouteDoabilityResponse;
-import it.zano.shareride.persistence.PreviousRequestInput;
+import it.zano.shareride.persistence.AreaTimeInput;
 import it.zano.shareride.persistence.PersistenceController;
 
 @Path("/bookingService")
@@ -33,8 +34,11 @@ public class BookingService extends BaseService {
 		
 		//Load from the db the previous request
 		bookingEntitiesController.setBookingRequest(bookingRequest);
-		PreviousRequestInput input = bookingEntitiesController.getPreviousRequestInput();
-		List<BookingRequest> previousRequests = persistenceController.getPreviousRequests(input);
+		AreaTimeInput input = bookingEntitiesController.getAreaTimeInput();
+		List<BookingRequest> previousRequests = persistenceController.loadPreviousRequests(input);
+		
+		//Load from the db the vehicles
+		List<Transport> availableTransports = persistenceController.loadAvailableTransports(input);
 		
 		//Get the new request (calculating lat and lon if we don't know them)
 		BookingRequest newRequest = bookingEntitiesController.getNewRequest();
@@ -43,6 +47,7 @@ public class BookingService extends BaseService {
 		//Asking graphhopper if the new route is viable
 		RouteDoabilityRequest doabilityRequest = new RouteDoabilityRequest();
 		doabilityRequest.setRequests(previousRequests);
+		doabilityRequest.setAvailableTransports(availableTransports);
 		RouteDoabilityResponse doabilityResponse = routeOptimizationController.assessDoability(doabilityRequest);
 		
 		//Saving in persistence the response

@@ -1,14 +1,29 @@
 package it.zano.shareride.optimization;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.graphhopper.directions.api.client.api.SolutionApi;
 import com.graphhopper.directions.api.client.api.VrpApi;
+import com.graphhopper.directions.api.client.model.Address;
+import com.graphhopper.directions.api.client.model.Algorithm;
+import com.graphhopper.directions.api.client.model.Algorithm.ObjectiveEnum;
+import com.graphhopper.directions.api.client.model.Algorithm.ProblemTypeEnum;
 import com.graphhopper.directions.api.client.model.JobId;
 import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Response;
+import com.graphhopper.directions.api.client.model.Shipment;
+import com.graphhopper.directions.api.client.model.SolutionUnassigned;
+import com.graphhopper.directions.api.client.model.Stop;
+import com.graphhopper.directions.api.client.model.TimeWindow;
+import com.graphhopper.directions.api.client.model.Vehicle;
 
+import it.zano.shareride.base.model.Location;
+import it.zano.shareride.base.model.Transport;
+import it.zano.shareride.booking.entities.BookingRequest;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class RouteOptimizationController {
@@ -51,13 +66,118 @@ public class RouteOptimizationController {
 	}
 
 	private RouteDoabilityResponse convertResponse(Response response) {
-		// TODO Auto-generated method stub
-		return null;
+		RouteDoabilityResponse doabilityResponse = new RouteDoabilityResponse();
+		
+		boolean acceptable = false;
+		SolutionUnassigned unassigned = response.getSolution().getUnassigned();
+		if(unassigned.getShipments().isEmpty()){
+			acceptable = true;
+		}
+		
+		//TODO the exact time and location of pickups
+		doabilityResponse.setAcceptable(acceptable);
+		return doabilityResponse;
 	}
 
-	private Request convertRequest(RouteDoabilityRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+	private Request convertRequest(RouteDoabilityRequest routeDoabilityRequest) {
+		
+		Request request = new Request();
+		
+		Algorithm algorithm = createAlgorithm();
+		request.setAlgorithm(algorithm);
+
+		List<Vehicle> vehicles = convertVehicles(routeDoabilityRequest.getAvailableTransports());
+		request.setVehicles(vehicles);
+
+		List<Shipment> shipments = convertShipments(routeDoabilityRequest.getRequests());
+		request.setShipments(shipments);
+
+		return request;
+	}
+
+	private List<Shipment> convertShipments(List<BookingRequest> requests) {
+
+		List<Shipment> shipments = new ArrayList<>();
+		for(BookingRequest bookingRequest : requests) {
+			Shipment shipment = convertShipment(bookingRequest);
+			shipments.add(shipment);
+		}
+		return shipments;
+	}
+
+	private Shipment convertShipment(BookingRequest bookingRequest) {
+		
+		Shipment shipment = new Shipment();
+		shipment.setId(bookingRequest.getId());
+		shipment.setSize(Arrays.asList(bookingRequest.getAdditionalInfo().getNumberOfSeats()));
+		shipment.setPickup(convertStop(bookingRequest.getPickup(), bookingRequest.getAdditionalInfo().getNumberOfSeats(), true));
+		shipment.setDelivery(convertStop(bookingRequest.getDelivery(), bookingRequest.getAdditionalInfo().getNumberOfSeats(), false));
+		return shipment;
+	}
+
+	private Stop convertStop(Location location, Integer numberOfSeats, boolean pickup) {
+		Stop stop = new Stop();
+		
+		stop.setAddress(convertAddress(location));
+		
+		Integer stopTimePerPerson = PropertiesLoader.getPropertyInt("routeoptimization.stopTimePerPerson");
+		Long duration = (long) (stopTimePerPerson * numberOfSeats);
+		stop.setDuration(duration);
+		
+		stop.setTimeWindows(Arrays.asList(convertTimeWindow(location.getTime(),pickup)));
+		return stop;
+	}
+
+	private TimeWindow convertTimeWindow(Long time, boolean pickup) {
+		TimeWindow timeWindow = new TimeWindow();
+		if(pickup) {
+			timeWindow.setEarliest(time);
+		} else {
+			timeWindow.setLatest(time);
+		}
+		return timeWindow;
+	}
+
+	private List<Vehicle> convertVehicles(List<Transport> availableTransports) {
+		
+		List<Vehicle> vehicles = new ArrayList<>();
+		for(Transport transport : availableTransports) {
+			Vehicle vehicle = convertVehicle(transport);
+			vehicles.add(vehicle);
+		}
+		return vehicles;
+	}
+
+	private Vehicle convertVehicle(Transport transport) {
+		
+		Vehicle vehicle = new Vehicle();
+		vehicle.setVehicleId(transport.getId());
+		vehicle.setTypeId(transport.getType());
+		vehicle.setStartAddress(convertAddress(transport.getStartAddress()));
+		
+		return vehicle;
+	}
+
+	private Algorithm createAlgorithm() {
+		Algorithm algorithm = new Algorithm();
+		
+		String objective = PropertiesLoader.getProperty("routeoptimization.planning.algorithm.objective");
+		ObjectiveEnum objectiveEnum = ObjectiveEnum.valueOf(objective);
+		algorithm.setObjective(objectiveEnum);
+		
+		String problemType = PropertiesLoader.getProperty("routeoptimization.planning.algorithm.problemType");
+		ProblemTypeEnum problemTypeEnum = ProblemTypeEnum.valueOf(problemType);
+		algorithm.setProblemType(problemTypeEnum);
+		
+		return algorithm;
+	}
+	
+	private Address convertAddress(Location location) {
+		Address address = new Address();
+		address.setLat(location.getLat());
+		address.setLon(location.getLon());
+		address.setLocationId(location.getLocationId());
+		return address;
 	}
 
 }

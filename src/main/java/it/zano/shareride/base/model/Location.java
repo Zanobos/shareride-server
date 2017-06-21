@@ -8,7 +8,7 @@ public class Location {
 	private String address;
 	private Double lat;
 	private Double lon;
-	private Date time;
+	private Long time;
 
 	public String getLocationId() {
 		return locationId;
@@ -42,11 +42,11 @@ public class Location {
 		this.lon = lon;
 	}
 
-	public Date getTime() {
+	public Long getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 

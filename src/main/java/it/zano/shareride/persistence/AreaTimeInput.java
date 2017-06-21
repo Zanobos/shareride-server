@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 /**
  * @author Zano
  */
-public class PreviousRequestInput {
+public class AreaTimeInput {
 
 	private String areaId;
 	private DateTime dateTime;

@@ -2,6 +2,7 @@ package it.zano.shareride.persistence;
 
 import java.util.List;
 
+import it.zano.shareride.base.model.Transport;
 import it.zano.shareride.booking.entities.BookingRequest;
 import it.zano.shareride.optimization.RouteDoabilityResponse;
 
@@ -12,7 +13,7 @@ public class PersistenceController {
 	 * @param input
 	 * @return
 	 */
-	public List<BookingRequest> getPreviousRequests(PreviousRequestInput input) {
+	public List<BookingRequest> loadPreviousRequests(AreaTimeInput input) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -25,6 +26,11 @@ public class PersistenceController {
 	public void saveNewRequest(BookingRequest newRequest, RouteDoabilityResponse doabilityResponse) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public List<Transport> loadAvailableTransports(AreaTimeInput input) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

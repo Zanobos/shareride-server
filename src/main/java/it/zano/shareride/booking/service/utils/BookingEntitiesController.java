@@ -1,7 +1,5 @@
 package it.zano.shareride.booking.service.utils;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 
 import it.zano.shareride.base.model.Location;
@@ -11,7 +9,7 @@ import it.zano.shareride.geocoding.ConvertAddressRequest;
 import it.zano.shareride.geocoding.ConvertAddressResponse;
 import it.zano.shareride.geocoding.GeocodingController;
 import it.zano.shareride.optimization.RouteDoabilityResponse;
-import it.zano.shareride.persistence.PreviousRequestInput;
+import it.zano.shareride.persistence.AreaTimeInput;
 
 public class BookingEntitiesController {
 
@@ -20,20 +18,20 @@ public class BookingEntitiesController {
 	/**
 	 * @return the object with the day and the area of this request, in order to be able to look for the others request already inserted
 	 */
-	public PreviousRequestInput getPreviousRequestInput() {
+	public AreaTimeInput getAreaTimeInput() {
 		
-		PreviousRequestInput previousRequestInput = new PreviousRequestInput();
+		AreaTimeInput previousRequestInput = new AreaTimeInput();
 		
 		String areaId = m_bookingRequest.getAdditionalInfo().getAreaId();
 		
-		Date date = m_bookingRequest.getDelivery().getTime();
+		Long date = m_bookingRequest.getDelivery().getTime();
 		if(date == null) {
 			date = m_bookingRequest.getPickup().getTime();
 		}
 		
 		DateTime dateTime = null;
 		if(date != null) {
-			dateTime = new DateTime(date.getTime());
+			dateTime = new DateTime(date);
 		}
 		previousRequestInput.setAreaId(areaId);
 		previousRequestInput.setDateTime(dateTime);
