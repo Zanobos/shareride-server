@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.joda.time.DateTime;
+
 import com.graphhopper.directions.api.client.api.SolutionApi;
 import com.graphhopper.directions.api.client.api.VrpApi;
 import com.graphhopper.directions.api.client.model.Address;
@@ -24,7 +26,7 @@ import com.graphhopper.directions.api.client.model.Vehicle;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
-import it.zano.shareride.persistence.entities.TransportEntity;
+import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -126,12 +128,14 @@ public class RouteOptimizationController {
 		Long duration = (long) (stopTimePerPerson * numberOfSeats);
 		stop.setDuration(duration);
 		
-		stop.setTimeWindows(Arrays.asList(convertTimeWindow(location.getTime(),pickup)));
+		stop.setTimeWindows(Arrays.asList(convertTimeWindow(location.getDateTime(),pickup)));
 		return stop;
 	}
 
-	private TimeWindow convertTimeWindow(Long time, boolean pickup) {
+	private TimeWindow convertTimeWindow(DateTime dateTime, boolean pickup) {
+		//TODO
 		TimeWindow timeWindow = new TimeWindow();
+		Long time = dateTime.getMillis();
 		if(pickup) {
 			timeWindow.setEarliest(time);
 		} else {
@@ -140,17 +144,17 @@ public class RouteOptimizationController {
 		return timeWindow;
 	}
 
-	private List<Vehicle> convertVehicles(List<TransportEntity> availableTransports) {
+	private List<Vehicle> convertVehicles(List<VehicleEntity> availableTransports) {
 		
 		List<Vehicle> vehicles = new ArrayList<>();
-		for(TransportEntity transport : availableTransports) {
+		for(VehicleEntity transport : availableTransports) {
 			Vehicle vehicle = convertVehicle(transport);
 			vehicles.add(vehicle);
 		}
 		return vehicles;
 	}
 
-	private Vehicle convertVehicle(TransportEntity transport) {
+	private Vehicle convertVehicle(VehicleEntity transport) {
 		
 		Vehicle vehicle = new Vehicle();
 		vehicle.setVehicleId(transport.getId());

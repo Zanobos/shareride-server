@@ -1,19 +1,15 @@
 package it.zano.shareride.persistence.entities;
 
-public class TransportEntity {
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-	private String id;
+@Entity
+@Table( name = "VEHICLES" )
+public class VehicleEntity extends BaseEntity{
+
 	private String type;
 	private int size;
 	private LocationEntity startAddress;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getType() {
 		return type;

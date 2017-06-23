@@ -7,50 +7,39 @@ import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
-import it.zano.shareride.persistence.io.AreaTimeInput;
 import it.zano.shareride.rest.booking.entities.Location;
 import it.zano.shareride.rest.booking.io.BookingRequest;
 import it.zano.shareride.rest.booking.io.BookingResponse;
 
-public class BookingEntitiesController {
+public class BookingServiceUtils {
 
-	private BookingRequest m_bookingRequest;
 	
-	/**
-	 * @return the object with the day and the area of this request, in order to be able to look for the other requests already inserted
-	 */
-	public AreaTimeInput getAreaTimeInput() {
+	public static DateTime getDateTime(BookingRequest bookingRequest) {
 		
-		AreaTimeInput previousRequestInput = new AreaTimeInput();
-		
-		String areaId = m_bookingRequest.getAdditionalInfo().getAreaId();
-		
-		Long date = m_bookingRequest.getDelivery().getTime();
+		Long date = bookingRequest.getDelivery().getTime();
 		if(date == null) {
-			date = m_bookingRequest.getPickup().getTime();
+			date = bookingRequest.getPickup().getTime();
 		}
 		
 		DateTime dateTime = null;
 		if(date != null) {
 			dateTime = new DateTime(date);
 		}
-		previousRequestInput.setAreaId(areaId);
-		previousRequestInput.setDateTime(dateTime);
-		return previousRequestInput;
+		return dateTime;
 	}
 
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
 	 */
-	public UserRequestEntity getNewRequest() {
+	public static UserRequestEntity convertRequest(BookingRequest bookingRequest) {
 		
-		enrichLocation(m_bookingRequest.getDelivery());
-		enrichLocation(m_bookingRequest.getPickup());
+		enrichLocation(bookingRequest.getDelivery());
+		enrichLocation(bookingRequest.getPickup());
 		
 		return null; //TODO
 	}
 
-	private void enrichLocation(Location location) {
+	private static void enrichLocation(Location location) {
 		
 		GeocodingController geocodingController = new GeocodingController();
 		
@@ -68,13 +57,9 @@ public class BookingEntitiesController {
 		
 	}
 
-	public BookingResponse createResponse(RouteDoabilityResponse doabilityResponse) {
+	public static BookingResponse convertResponse(RouteDoabilityResponse doabilityResponse) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void setBookingRequest(BookingRequest bookingRequest) {
-		m_bookingRequest = bookingRequest;
 	}
 
 }

@@ -2,13 +2,13 @@ package it.zano.shareride.optimization.io;
 
 import java.util.List;
 
-import it.zano.shareride.persistence.entities.TransportEntity;
+import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 
 public class RouteDoabilityRequest {
 
 	private List<UserRequestEntity> requests;
-	private List<TransportEntity> availableTransports;
+	private List<VehicleEntity> availableTransports;
 
 	public List<UserRequestEntity> getRequests() {
 		return requests;
@@ -18,11 +18,11 @@ public class RouteDoabilityRequest {
 		this.requests = requests;
 	}
 
-	public List<TransportEntity> getAvailableTransports() {
+	public List<VehicleEntity> getAvailableTransports() {
 		return availableTransports;
 	}
 
-	public void setAvailableTransports(List<TransportEntity> availableTransports) {
+	public void setAvailableTransports(List<VehicleEntity> availableTransports) {
 		this.availableTransports = availableTransports;
 	}
 

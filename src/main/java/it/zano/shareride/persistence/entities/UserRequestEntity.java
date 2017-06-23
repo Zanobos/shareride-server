@@ -1,21 +1,23 @@
 package it.zano.shareride.persistence.entities;
 
-public class UserRequestEntity {
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-	private String id;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
+@Entity
+@Table(name = "USER_REQUESTS")
+public class UserRequestEntity extends BaseEntity {
+
 	private String userName;
 	private LocationEntity pickup;
 	private LocationEntity delivery;
 	private Integer numberOfSeats;
 	private Boolean needAssistance;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
+	private String areaId;
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private DateTime dateTime;
 
 	public String getUserName() {
 		return userName;
@@ -55,6 +57,22 @@ public class UserRequestEntity {
 
 	public void setNeedAssistance(Boolean needAssistance) {
 		this.needAssistance = needAssistance;
+	}
+
+	public String getAreaId() {
+		return areaId;
+	}
+
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+
+	public DateTime getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(DateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 }

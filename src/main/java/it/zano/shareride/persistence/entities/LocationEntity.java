@@ -1,12 +1,23 @@
 package it.zano.shareride.persistence.entities;
 
-public class LocationEntity {
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
+import it.zano.shareride.persistence.PersistenceController;
+
+@Entity
+@Table( name = PersistenceController.LOCATIONS )
+public class LocationEntity extends BaseEntity{
 
 	private String locationId;
 	private String address;
 	private Double lat;
 	private Double lon;
-	private Long time;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	private DateTime dateTime;
 
 	public String getLocationId() {
 		return locationId;
@@ -40,12 +51,12 @@ public class LocationEntity {
 		this.lon = lon;
 	}
 
-	public Long getTime() {
-		return time;
+	public DateTime getDateTime() {
+		return dateTime;
 	}
 
-	public void setTime(Long time) {
-		this.time = time;
+	public void setDateTime(DateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 }

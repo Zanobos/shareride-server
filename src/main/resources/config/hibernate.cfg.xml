@@ -35,7 +35,10 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
-
+		<mapping class="it.zano.shareride.persistence.entities.LocationEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.TransportEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.UserRequestEntity"/>
+		
     </session-factory>
 
 </hibernate-configuration>
