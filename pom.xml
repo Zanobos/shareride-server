@@ -20,6 +20,7 @@
 		<javax-ws-rs.version>2.0</javax-ws-rs.version>
 		<graphopper-api.version>0.9.0</graphopper-api.version>
 		<joda-time.version>2.9.9</joda-time.version>
+		<h2.version>1.4.196</h2.version>
 		
 		<maven-war-plugin.version>2.3</maven-war-plugin.version>
 		<tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
@@ -28,6 +29,7 @@
 	<dependencies>
 		<!-- Compile/runtime dependencies -->
 
+		<!-- Web/Rest -->
 		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
@@ -46,6 +48,8 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${glassfish-jersey.version}</version>
 		</dependency>
+		
+		<!-- Time, Marshalling and Graphhopper -->
 		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -62,6 +66,22 @@
 			<artifactId>directions-api-client</artifactId>
 			<version>${graphopper-api.version}</version>
 		</dependency>
+		
+		<!-- Database -->
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>${h2.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>5.2.10.Final</version>
+		</dependency>
+		
 
 		<!-- Test Dependencies -->
 		<dependency>
