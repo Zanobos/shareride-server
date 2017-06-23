@@ -1,4 +1,6 @@
-package it.zano.shareride.base.model;
+package it.zano.shareride.rest.booking.entities;
+
+import it.zano.shareride.utils.EnumPeriodicity;
 
 public class AdditionalInfo {
 

@@ -14,8 +14,6 @@ import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Service;
 import com.graphhopper.directions.api.client.model.Vehicle;
 
-import it.zano.shareride.base.model.Constants;
-
 public class TestRequestUtils {
 
 	private static final String suffix = ".json";

@@ -1,4 +1,4 @@
-package it.zano.shareride.persistence;
+package it.zano.shareride.persistence.io;
 
 import org.joda.time.DateTime;
 

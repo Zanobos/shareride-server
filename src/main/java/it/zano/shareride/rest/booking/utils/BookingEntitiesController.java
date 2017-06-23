@@ -1,22 +1,23 @@
-package it.zano.shareride.booking.service.utils;
+package it.zano.shareride.rest.booking.utils;
 
 import org.joda.time.DateTime;
 
-import it.zano.shareride.base.model.Location;
-import it.zano.shareride.booking.entities.BookingRequest;
-import it.zano.shareride.booking.entities.BookingResponse;
-import it.zano.shareride.geocoding.ConvertAddressRequest;
-import it.zano.shareride.geocoding.ConvertAddressResponse;
 import it.zano.shareride.geocoding.GeocodingController;
-import it.zano.shareride.optimization.RouteDoabilityResponse;
-import it.zano.shareride.persistence.AreaTimeInput;
+import it.zano.shareride.geocoding.io.ConvertAddressRequest;
+import it.zano.shareride.geocoding.io.ConvertAddressResponse;
+import it.zano.shareride.optimization.io.RouteDoabilityResponse;
+import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.persistence.io.AreaTimeInput;
+import it.zano.shareride.rest.booking.entities.Location;
+import it.zano.shareride.rest.booking.io.BookingRequest;
+import it.zano.shareride.rest.booking.io.BookingResponse;
 
 public class BookingEntitiesController {
 
 	private BookingRequest m_bookingRequest;
 	
 	/**
-	 * @return the object with the day and the area of this request, in order to be able to look for the others request already inserted
+	 * @return the object with the day and the area of this request, in order to be able to look for the other requests already inserted
 	 */
 	public AreaTimeInput getAreaTimeInput() {
 		
@@ -41,12 +42,12 @@ public class BookingEntitiesController {
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
 	 */
-	public BookingRequest getNewRequest() {
+	public UserRequestEntity getNewRequest() {
 		
 		enrichLocation(m_bookingRequest.getDelivery());
 		enrichLocation(m_bookingRequest.getPickup());
 		
-		return m_bookingRequest;
+		return null; //TODO
 	}
 
 	private void enrichLocation(Location location) {

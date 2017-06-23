@@ -1,4 +1,4 @@
-package it.zano.shareride.geocoding;
+package it.zano.shareride.geocoding.io;
 
 public class ConvertAddressResponse {
 

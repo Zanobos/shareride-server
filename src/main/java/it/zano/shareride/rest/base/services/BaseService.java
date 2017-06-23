@@ -1,4 +1,4 @@
-package it.zano.shareride.booking.service;
+package it.zano.shareride.rest.base.services;
 
 import java.util.logging.Logger;
 

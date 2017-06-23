@@ -1,4 +1,4 @@
-package it.zano.shareride.base.entities;
+package it.zano.shareride.rest.base.io;
 
 public class BaseResponse {
 

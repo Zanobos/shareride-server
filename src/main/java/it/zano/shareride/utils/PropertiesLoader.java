@@ -6,8 +6,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.zano.shareride.base.model.Constants;
-
 public class PropertiesLoader {
 
 	private static final Logger log = Logger.getLogger(PropertiesLoader.class.getName());

@@ -1,4 +1,4 @@
-package it.zano.shareride.base.model;
+package it.zano.shareride.utils;
 
 public enum EnumPeriodicity {
 	

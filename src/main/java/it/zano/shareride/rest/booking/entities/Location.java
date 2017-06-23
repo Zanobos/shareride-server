@@ -1,6 +1,4 @@
-package it.zano.shareride.base.model;
-
-import java.util.Date;
+package it.zano.shareride.rest.booking.entities;
 
 public class Location {
 

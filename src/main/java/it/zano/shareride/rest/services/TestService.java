@@ -1,4 +1,4 @@
-package it.zano.shareride.booking.service;
+package it.zano.shareride.rest.services;
 
 import java.util.logging.Level;
 
@@ -17,9 +17,10 @@ import com.graphhopper.directions.api.client.model.JobId;
 import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Response;
 
-import it.zano.shareride.geocoding.ConvertAddressRequest;
-import it.zano.shareride.geocoding.ConvertAddressResponse;
 import it.zano.shareride.geocoding.GeocodingController;
+import it.zano.shareride.geocoding.io.ConvertAddressRequest;
+import it.zano.shareride.geocoding.io.ConvertAddressResponse;
+import it.zano.shareride.rest.base.services.BaseService;
 import it.zano.shareride.utils.PropertiesLoader;
 import it.zano.shareride.utils.TestRequestUtils;
 

@@ -1,4 +1,4 @@
-package it.zano.shareride.booking.service;
+package it.zano.shareride.rest.services;
 
 import java.util.List;
 
@@ -8,15 +8,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import it.zano.shareride.base.model.Transport;
-import it.zano.shareride.booking.entities.BookingRequest;
-import it.zano.shareride.booking.entities.BookingResponse;
-import it.zano.shareride.booking.service.utils.BookingEntitiesController;
 import it.zano.shareride.optimization.RouteOptimizationController;
-import it.zano.shareride.optimization.RouteDoabilityRequest;
-import it.zano.shareride.optimization.RouteDoabilityResponse;
-import it.zano.shareride.persistence.AreaTimeInput;
+import it.zano.shareride.optimization.io.RouteDoabilityRequest;
+import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.PersistenceController;
+import it.zano.shareride.persistence.entities.TransportEntity;
+import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.persistence.io.AreaTimeInput;
+import it.zano.shareride.rest.base.services.BaseService;
+import it.zano.shareride.rest.booking.io.BookingRequest;
+import it.zano.shareride.rest.booking.io.BookingResponse;
+import it.zano.shareride.rest.booking.utils.BookingEntitiesController;
 
 @Path("/bookingService")
 public class BookingService extends BaseService {
@@ -35,13 +37,13 @@ public class BookingService extends BaseService {
 		//Load from the db the previous request
 		bookingEntitiesController.setBookingRequest(bookingRequest);
 		AreaTimeInput input = bookingEntitiesController.getAreaTimeInput();
-		List<BookingRequest> previousRequests = persistenceController.loadPreviousRequests(input);
+		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(input);
 		
 		//Load from the db the vehicles
-		List<Transport> availableTransports = persistenceController.loadAvailableTransports(input);
+		List<TransportEntity> availableTransports = persistenceController.loadAvailableTransports(input);
 		
 		//Get the new request (calculating lat and lon if we don't know them)
-		BookingRequest newRequest = bookingEntitiesController.getNewRequest();
+		UserRequestEntity newRequest = bookingEntitiesController.getNewRequest();
 		previousRequests.add(newRequest);
 		
 		//Asking graphhopper if the new route is viable

@@ -1,11 +1,11 @@
-package it.zano.shareride.base.model;
+package it.zano.shareride.persistence.entities;
 
-public class Transport {
+public class TransportEntity {
 
 	private String id;
 	private String type;
 	private int size;
-	private Location startAddress;
+	private LocationEntity startAddress;
 
 	public String getId() {
 		return id;
@@ -31,11 +31,11 @@ public class Transport {
 		this.size = size;
 	}
 
-	public Location getStartAddress() {
+	public LocationEntity getStartAddress() {
 		return startAddress;
 	}
 
-	public void setStartAddress(Location startAddress) {
+	public void setStartAddress(LocationEntity startAddress) {
 		this.startAddress = startAddress;
 	}
 

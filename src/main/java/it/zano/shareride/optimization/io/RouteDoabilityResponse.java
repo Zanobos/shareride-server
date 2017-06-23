@@ -1,4 +1,4 @@
-package it.zano.shareride.optimization;
+package it.zano.shareride.optimization.io;
 
 public class RouteDoabilityResponse {
 

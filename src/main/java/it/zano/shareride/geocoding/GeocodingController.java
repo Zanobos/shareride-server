@@ -9,6 +9,8 @@ import com.graphhopper.directions.api.client.model.GeocodingLocation;
 import com.graphhopper.directions.api.client.model.GeocodingPoint;
 import com.graphhopper.directions.api.client.model.GeocodingResponse;
 
+import it.zano.shareride.geocoding.io.ConvertAddressRequest;
+import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class GeocodingController {

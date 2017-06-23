@@ -21,9 +21,11 @@ import com.graphhopper.directions.api.client.model.Stop;
 import com.graphhopper.directions.api.client.model.TimeWindow;
 import com.graphhopper.directions.api.client.model.Vehicle;
 
-import it.zano.shareride.base.model.Location;
-import it.zano.shareride.base.model.Transport;
-import it.zano.shareride.booking.entities.BookingRequest;
+import it.zano.shareride.optimization.io.RouteDoabilityRequest;
+import it.zano.shareride.optimization.io.RouteDoabilityResponse;
+import it.zano.shareride.persistence.entities.LocationEntity;
+import it.zano.shareride.persistence.entities.TransportEntity;
+import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class RouteOptimizationController {
@@ -95,27 +97,27 @@ public class RouteOptimizationController {
 		return request;
 	}
 
-	private List<Shipment> convertShipments(List<BookingRequest> requests) {
+	private List<Shipment> convertShipments(List<UserRequestEntity> requests) {
 
 		List<Shipment> shipments = new ArrayList<>();
-		for(BookingRequest bookingRequest : requests) {
-			Shipment shipment = convertShipment(bookingRequest);
+		for(UserRequestEntity request : requests) {
+			Shipment shipment = convertShipment(request);
 			shipments.add(shipment);
 		}
 		return shipments;
 	}
 
-	private Shipment convertShipment(BookingRequest bookingRequest) {
+	private Shipment convertShipment(UserRequestEntity userRequest) {
 		
 		Shipment shipment = new Shipment();
-		shipment.setId(bookingRequest.getId());
-		shipment.setSize(Arrays.asList(bookingRequest.getAdditionalInfo().getNumberOfSeats()));
-		shipment.setPickup(convertStop(bookingRequest.getPickup(), bookingRequest.getAdditionalInfo().getNumberOfSeats(), true));
-		shipment.setDelivery(convertStop(bookingRequest.getDelivery(), bookingRequest.getAdditionalInfo().getNumberOfSeats(), false));
+		shipment.setId(userRequest.getId());
+		shipment.setSize(Arrays.asList(userRequest.getNumberOfSeats()));
+		shipment.setPickup(convertStop(userRequest.getPickup(), userRequest.getNumberOfSeats(), true));
+		shipment.setDelivery(convertStop(userRequest.getDelivery(), userRequest.getNumberOfSeats(), false));
 		return shipment;
 	}
 
-	private Stop convertStop(Location location, Integer numberOfSeats, boolean pickup) {
+	private Stop convertStop(LocationEntity location, Integer numberOfSeats, boolean pickup) {
 		Stop stop = new Stop();
 		
 		stop.setAddress(convertAddress(location));
@@ -138,17 +140,17 @@ public class RouteOptimizationController {
 		return timeWindow;
 	}
 
-	private List<Vehicle> convertVehicles(List<Transport> availableTransports) {
+	private List<Vehicle> convertVehicles(List<TransportEntity> availableTransports) {
 		
 		List<Vehicle> vehicles = new ArrayList<>();
-		for(Transport transport : availableTransports) {
+		for(TransportEntity transport : availableTransports) {
 			Vehicle vehicle = convertVehicle(transport);
 			vehicles.add(vehicle);
 		}
 		return vehicles;
 	}
 
-	private Vehicle convertVehicle(Transport transport) {
+	private Vehicle convertVehicle(TransportEntity transport) {
 		
 		Vehicle vehicle = new Vehicle();
 		vehicle.setVehicleId(transport.getId());
@@ -172,7 +174,7 @@ public class RouteOptimizationController {
 		return algorithm;
 	}
 	
-	private Address convertAddress(Location location) {
+	private Address convertAddress(LocationEntity location) {
 		Address address = new Address();
 		address.setLat(location.getLat());
 		address.setLon(location.getLon());
