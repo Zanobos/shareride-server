@@ -22,7 +22,7 @@
 		<joda-time.version>2.9.9</joda-time.version>
 		<h2.version>1.4.196</h2.version>
 		<hibernate.version>5.1.7.Final</hibernate.version>
-		<jadira.version>6.0.1.GA</jadira.version>
+		<jadira.version>5.0.0.GA</jadira.version>
 		
 		<maven-war-plugin.version>2.3</maven-war-plugin.version>
 		<tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>

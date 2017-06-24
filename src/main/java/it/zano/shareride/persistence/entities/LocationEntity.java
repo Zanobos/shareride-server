@@ -9,22 +9,22 @@ import org.joda.time.DateTime;
 import it.zano.shareride.persistence.PersistenceController;
 
 @Entity
-@Table( name = PersistenceController.LOCATIONS )
-public class LocationEntity extends BaseEntity{
+@Table(name = PersistenceController.LOCATIONS)
+public class LocationEntity extends BaseEntity {
 
-	private String locationId;
+	private String locationName;
 	private String address;
 	private Double lat;
 	private Double lon;
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	private DateTime dateTime;
 
-	public String getLocationId() {
-		return locationId;
+	public String getLocationName() {
+		return locationName;
 	}
 
-	public void setLocationId(String locationId) {
-		this.locationId = locationId;
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 	public String getAddress() {

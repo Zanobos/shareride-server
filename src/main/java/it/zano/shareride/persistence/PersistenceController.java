@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
+import it.zano.shareride.utils.Constants;
 
 public class PersistenceController {
 
@@ -30,7 +31,7 @@ public class PersistenceController {
 	private PersistenceController() {
 		log.log(Level.INFO, "Initializing Hibernate");
 		final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-				.configure() /* configures settings from hibernate.cfg.xml */
+				.configure(Constants.FileSystem.DIR_CONFIG + Constants.FileSystem.SEPARATOR + Constants.FileSystem.FILE_HIBERNATE) 
 				.build();
 		try {
 			sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
@@ -57,12 +58,12 @@ public class PersistenceController {
 	 */
 	public List<UserRequestEntity> loadPreviousRequests(DateTime date, String areaId) {
 		//TODO date
-		String hql = "FROM " + USER_REQUESTS + " R WHERE E.areaId = :area_id";
+		String hql = "FROM UserRequestEntity R WHERE R.areaId = :area_id";
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Query query = session.createQuery(hql);
-		query.setParameter(":area_id", areaId);
+		query.setParameter("area_id", areaId);
 		
 		@SuppressWarnings("unchecked")
 		List<UserRequestEntity> list = query.list();

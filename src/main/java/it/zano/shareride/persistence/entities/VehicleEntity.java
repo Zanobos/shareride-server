@@ -1,6 +1,8 @@
 package it.zano.shareride.persistence.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -9,6 +11,7 @@ public class VehicleEntity extends BaseEntity{
 
 	private String type;
 	private int size;
+	@ManyToOne(cascade = CascadeType.ALL)
 	private LocationEntity startAddress;
 
 	public String getType() {

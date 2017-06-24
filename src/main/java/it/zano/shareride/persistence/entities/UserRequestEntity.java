@@ -1,6 +1,8 @@
 package it.zano.shareride.persistence.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -11,7 +13,9 @@ import org.joda.time.DateTime;
 public class UserRequestEntity extends BaseEntity {
 
 	private String userName;
+	@OneToOne(cascade = CascadeType.ALL)
 	private LocationEntity pickup;
+	@OneToOne(cascade = CascadeType.ALL)
 	private LocationEntity delivery;
 	private Integer numberOfSeats;
 	private Boolean needAssistance;

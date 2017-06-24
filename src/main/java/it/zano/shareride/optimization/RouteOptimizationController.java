@@ -182,7 +182,7 @@ public class RouteOptimizationController {
 		Address address = new Address();
 		address.setLat(location.getLat());
 		address.setLon(location.getLon());
-		address.setLocationId(location.getLocationId());
+		address.setLocationId(location.getLocationName());
 		return address;
 	}
 
