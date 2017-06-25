@@ -12,7 +12,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.joda.time.DateTime;
 
-import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.utils.Constants;
@@ -51,17 +50,17 @@ public class PersistenceController {
 	}
 
 	/**
-	 * I load from the db the previous requests
-	 * 
+	 * Loading from the db the previous requests
 	 * @param input
 	 * @return
 	 */
 	public List<UserRequestEntity> loadPreviousRequests(DateTime date, String areaId) {
-		//TODO date
+
 		String hql = "FROM UserRequestEntity R WHERE R.areaId = :area_id";
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
+		
 		Query query = session.createQuery(hql);
 		query.setParameter("area_id", areaId);
 		
@@ -78,16 +77,41 @@ public class PersistenceController {
 	 * Saving a new request
 	 * 
 	 * @param newRequest
-	 * @param doabilityResponse
 	 */
-	public void saveNewRequest(UserRequestEntity newRequest, RouteDoabilityResponse doabilityResponse) {
-		// TODO Auto-generated method stub
+	public void saveNewRequest(UserRequestEntity newRequest) {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		session.save(newRequest);
+		
+		session.getTransaction().commit();
+		session.close();
 
 	}
 
+	/**
+	 * Loading from the db available transports
+	 * @param date
+	 * @param areaId
+	 * @return
+	 */
 	public List<VehicleEntity> loadAvailableTransports(DateTime date, String areaId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		String hql = "FROM VehicleEntity V WHERE V.areaId = :area_id";
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("area_id", areaId);
+		
+		@SuppressWarnings("unchecked")
+		List<VehicleEntity> list = query.list();
+		
+		session.getTransaction().commit();
+        session.close();
+        
+		return list;
 	}
 
 }

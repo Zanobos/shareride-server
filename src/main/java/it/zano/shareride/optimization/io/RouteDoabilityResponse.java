@@ -1,15 +1,26 @@
 package it.zano.shareride.optimization.io;
 
+import it.zano.shareride.utils.EnumStatus;
+
 public class RouteDoabilityResponse {
 
-	private Boolean acceptable;
+	private EnumStatus status;
+	private String requestId;
 
-	public Boolean getAcceptable() {
-		return acceptable;
+	public EnumStatus getStatus() {
+		return status;
 	}
 
-	public void setAcceptable(Boolean acceptable) {
-		this.acceptable = acceptable;
+	public void setStatus(EnumStatus status) {
+		this.status = status;
+	}
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
 	}
 
 }

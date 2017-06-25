@@ -2,18 +2,18 @@ package it.zano.shareride.rest.booking.entities;
 
 public class Location {
 
-	private String locationId;
+	private String locationName;
 	private String address;
 	private Double lat;
 	private Double lon;
 	private Long time;
 
-	public String getLocationId() {
-		return locationId;
+	public String getLocationName() {
+		return locationName;
 	}
 
-	public void setLocationId(String locationId) {
-		this.locationId = locationId;
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 	public String getAddress() {

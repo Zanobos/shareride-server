@@ -51,9 +51,11 @@ public class BookingService extends BaseService {
 		doabilityRequest.setRequests(previousRequests);
 		doabilityRequest.setAvailableTransports(availableTransports);
 		RouteDoabilityResponse doabilityResponse = routeOptimizationController.assessDoability(doabilityRequest);
+		newRequest.setStatus(doabilityResponse.getStatus());
 		
 		//Saving in persistence the response
-		persistenceController.saveNewRequest(newRequest,doabilityResponse);
+		persistenceController.saveNewRequest(newRequest);
+		doabilityResponse.setRequestId(newRequest.getId());
 		
 		//Preparing the response
 		BookingResponse bookingResponse = BookingServiceUtils.convertResponse(doabilityResponse);

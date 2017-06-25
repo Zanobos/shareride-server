@@ -6,6 +6,7 @@ import it.zano.shareride.geocoding.GeocodingController;
 import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
+import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.booking.entities.Location;
 import it.zano.shareride.rest.booking.io.BookingRequest;
@@ -33,10 +34,32 @@ public class BookingServiceUtils {
 	 */
 	public static UserRequestEntity convertRequest(BookingRequest bookingRequest) {
 		
+		UserRequestEntity userRequest = new UserRequestEntity();
+		
 		enrichLocation(bookingRequest.getDelivery());
 		enrichLocation(bookingRequest.getPickup());
 		
-		return null; //TODO
+		userRequest.setAreaId(bookingRequest.getAdditionalInfo().getAreaId());
+		userRequest.setDateTime(getDateTime(bookingRequest));
+		userRequest.setNeedAssistance(bookingRequest.getAdditionalInfo().getNeedAssistance());
+		userRequest.setNumberOfSeats(bookingRequest.getAdditionalInfo().getNumberOfSeats());
+		userRequest.setUserName(bookingRequest.getUserInfo().getName());
+		userRequest.setDelivery(convertLocation(bookingRequest.getDelivery()));
+		userRequest.setPickup(convertLocation(bookingRequest.getPickup()));
+		
+		return userRequest;
+	}
+
+	private static LocationEntity convertLocation(Location location) {
+		LocationEntity locationEntity = new LocationEntity();
+		
+		locationEntity.setAddress(location.getAddress());
+		locationEntity.setDateTime(location.getTime() != null ? new DateTime(location.getTime()) : null);
+		locationEntity.setLat(location.getLat());
+		locationEntity.setLocationName(location.getLocationName());
+		locationEntity.setLon(location.getLon());
+		
+		return locationEntity;
 	}
 
 	private static void enrichLocation(Location location) {
@@ -58,8 +81,13 @@ public class BookingServiceUtils {
 	}
 
 	public static BookingResponse convertResponse(RouteDoabilityResponse doabilityResponse) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		BookingResponse response = new BookingResponse();
+		
+		response.setStatus(doabilityResponse.getStatus());
+		response.setRequestId(doabilityResponse.getRequestId());
+		
+		return response;
 	}
 
 }

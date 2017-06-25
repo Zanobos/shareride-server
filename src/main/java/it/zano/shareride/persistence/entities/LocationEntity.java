@@ -16,7 +16,7 @@ public class LocationEntity extends BaseEntity {
 	private String address;
 	private Double lat;
 	private Double lon;
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime dateTime;
 
 	public String getLocationName() {

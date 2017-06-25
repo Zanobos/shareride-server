@@ -2,11 +2,15 @@ package it.zano.shareride.persistence.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import it.zano.shareride.utils.EnumStatus;
 
 @Entity
 @Table(name = "USER_REQUESTS")
@@ -20,8 +24,10 @@ public class UserRequestEntity extends BaseEntity {
 	private Integer numberOfSeats;
 	private Boolean needAssistance;
 	private String areaId;
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime dateTime;
+	@Enumerated(EnumType.STRING)	
+	private EnumStatus status;
 
 	public String getUserName() {
 		return userName;
@@ -77,6 +83,14 @@ public class UserRequestEntity extends BaseEntity {
 
 	public void setDateTime(DateTime dateTime) {
 		this.dateTime = dateTime;
+	}
+
+	public EnumStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EnumStatus status) {
+		this.status = status;
 	}
 
 }

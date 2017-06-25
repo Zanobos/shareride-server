@@ -28,6 +28,7 @@ import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class RouteOptimizationController {
@@ -72,14 +73,14 @@ public class RouteOptimizationController {
 	private RouteDoabilityResponse convertResponse(Response response) {
 		RouteDoabilityResponse doabilityResponse = new RouteDoabilityResponse();
 		
-		boolean acceptable = false;
+		EnumStatus status = EnumStatus.REJECTED;
 		SolutionUnassigned unassigned = response.getSolution().getUnassigned();
 		if(unassigned.getShipments().isEmpty()){
-			acceptable = true;
+			status = EnumStatus.ACCEPTED;
 		}
 		
 		//TODO the exact time and location of pickups
-		doabilityResponse.setAcceptable(acceptable);
+		doabilityResponse.setStatus(status);
 		return doabilityResponse;
 	}
 

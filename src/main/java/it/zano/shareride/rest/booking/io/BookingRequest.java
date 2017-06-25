@@ -7,19 +7,10 @@ import it.zano.shareride.rest.booking.entities.UserInfo;
 
 public class BookingRequest extends BaseRequest {
 
-	private String id;
 	private UserInfo userInfo;
 	private Location pickup;
 	private Location delivery;
 	private AdditionalInfo additionalInfo;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public UserInfo getUserInfo() {
 		return userInfo;
