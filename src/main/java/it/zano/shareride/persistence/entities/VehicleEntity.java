@@ -6,21 +6,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table( name = "VEHICLES" )
-public class VehicleEntity extends BaseEntity{
+@Table(name = "VEHICLES")
+public class VehicleEntity extends BaseEntity {
 
-	private int size;
+	private String vehicleId;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private LocationEntity startAddress;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private VehicleTypeEntity type;
 
-	public int getSize() {
-		return size;
+	public String getVehicleId() {
+		return vehicleId;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public void setVehicleId(String vehicleId) {
+		this.vehicleId = vehicleId;
 	}
 
 	public LocationEntity getStartAddress() {
@@ -38,6 +38,5 @@ public class VehicleEntity extends BaseEntity{
 	public void setType(VehicleTypeEntity type) {
 		this.type = type;
 	}
-	
 
 }

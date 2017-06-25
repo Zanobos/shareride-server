@@ -1,0 +1,13 @@
+{
+  "vehicleId": "Pullman piccolo",
+  "startAddress": {
+    "locationName": "Rimessa",
+    "address": "Via Isonzo, 91, Forlì",
+    "lat": 44.231411,
+    "lon": 12.031023
+  },
+  "type": {
+    "typeId": "van",
+    "capacity": 8
+  }
+}

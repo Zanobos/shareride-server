@@ -112,5 +112,21 @@ public class PersistenceController {
         
 		return list;
 	}
+	
+	/**
+	 * Saving a new request
+	 * 
+	 * @param vehicleEntity
+	 */
+	public void saveVehicle(VehicleEntity vehicleEntity) {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		session.save(vehicleEntity);
+		
+		session.getTransaction().commit();
+		session.close();
+
+	}
 
 }
