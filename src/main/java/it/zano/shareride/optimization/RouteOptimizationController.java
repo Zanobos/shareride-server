@@ -54,6 +54,7 @@ public class RouteOptimizationController {
 		JobId jobId;
 		RouteDoabilityResponse response = null;
 		try {
+			log.log(Level.FINE, "In method: assessDoability, OUTBOUND:\n" + body.toString());
 			jobId = vrpApi.postVrp(key, body);
 
 			SolutionApi solApi = new SolutionApi();

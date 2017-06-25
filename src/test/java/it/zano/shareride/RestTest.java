@@ -1,6 +1,7 @@
 package it.zano.shareride;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +28,7 @@ public class RestTest {
 	public void testBookingService1() {
 		
 		VehicleEntity vehicle = TestUtils.createVehicle("01");
+		assertNotNull(vehicle);
 		persistenceController.saveVehicle(vehicle);
 		
 		BookingRequest bookingRequest = TestUtils.createRequest("01");

@@ -25,7 +25,7 @@ public class HibernateTest {
 	public void testHibernateRequests() {
 		
 		DateTime dateTime = new DateTime();
-		String areaId = "FC";
+		String areaId = "TO";
 		
 		UserRequestEntity userRequest = new UserRequestEntity();
 		
