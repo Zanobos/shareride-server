@@ -35,14 +35,6 @@ public class HibernateTest {
 		userRequest.setNumberOfSeats(1);
 		userRequest.setUserName("Andrea Zanotti");
 		
-		LocationEntity delivery = new LocationEntity();
-		delivery.setAddress("Via Cassirano, 54");
-		delivery.setDateTime(null);
-		delivery.setLat(44.2457233);
-		delivery.setLocationName("Casa di Andrea");
-		delivery.setLon(12.0042451);
-		userRequest.setDelivery(delivery);
-		
 		LocationEntity pickup = new LocationEntity();
 		pickup.setAddress("Via della Lepre, 43");
 		pickup.setDateTime(dateTime);
@@ -50,6 +42,14 @@ public class HibernateTest {
 		pickup.setLocationName("Casa di Vale");
 		pickup.setLon(11.9965901);
 		userRequest.setPickup(pickup);
+		
+		LocationEntity delivery = new LocationEntity();
+		delivery.setAddress("Via Cassirano, 54");
+		delivery.setDateTime(null);
+		delivery.setLat(44.2457233);
+		delivery.setLocationName("Casa di Andrea");
+		delivery.setLon(12.0042451);
+		userRequest.setDelivery(delivery);
 		
 		controller.saveNewRequest(userRequest);
 		

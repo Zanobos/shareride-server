@@ -9,18 +9,11 @@ import javax.persistence.Table;
 @Table( name = "VEHICLES" )
 public class VehicleEntity extends BaseEntity{
 
-	private String type;
 	private int size;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private LocationEntity startAddress;
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	@ManyToOne(cascade = CascadeType.ALL)
+	private VehicleTypeEntity type;
 
 	public int getSize() {
 		return size;
@@ -37,5 +30,14 @@ public class VehicleEntity extends BaseEntity{
 	public void setStartAddress(LocationEntity startAddress) {
 		this.startAddress = startAddress;
 	}
+
+	public VehicleTypeEntity getType() {
+		return type;
+	}
+
+	public void setType(VehicleTypeEntity type) {
+		this.type = type;
+	}
+	
 
 }

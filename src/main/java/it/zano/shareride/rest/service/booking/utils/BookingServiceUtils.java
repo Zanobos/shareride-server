@@ -1,4 +1,4 @@
-package it.zano.shareride.rest.booking.utils;
+package it.zano.shareride.rest.service.booking.utils;
 
 import org.joda.time.DateTime;
 
@@ -8,9 +8,10 @@ import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
-import it.zano.shareride.rest.booking.entities.Location;
-import it.zano.shareride.rest.booking.io.BookingRequest;
-import it.zano.shareride.rest.booking.io.BookingResponse;
+import it.zano.shareride.rest.service.booking.entities.Location;
+import it.zano.shareride.rest.service.booking.io.BookingRequest;
+import it.zano.shareride.rest.service.booking.io.BookingResponse;
+import it.zano.shareride.utils.EnumStatus;
 
 public class BookingServiceUtils {
 
@@ -46,6 +47,7 @@ public class BookingServiceUtils {
 		userRequest.setUserName(bookingRequest.getUserInfo().getName());
 		userRequest.setDelivery(convertLocation(bookingRequest.getDelivery()));
 		userRequest.setPickup(convertLocation(bookingRequest.getPickup()));
+		userRequest.setStatus(EnumStatus.TOBEDONE);
 		
 		return userRequest;
 	}

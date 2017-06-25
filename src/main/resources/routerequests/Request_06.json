@@ -1,0 +1,46 @@
+{
+  "vehicles": [],
+  "vehicle_types": [
+    {
+      "type_id": "van",
+      "profile": "small_truck",
+      "capacity": [
+        8
+      ]
+    }
+  ],
+  "shipments": [
+    {
+      "id": "f477dc35-e15c-4faf-9bd6-bbfa7ce504f7",
+      "name": null,
+      "pickup": {
+        "address": {
+          "location_id": "Casa di Vale",
+          "name": "Via della Lepre, 43",
+          "lon": 11.9965901,
+          "lat": 44.2189271
+        },
+        "duration": 5,
+        "time_windows": []
+      },
+      "delivery": {
+        "address": {
+          "location_id": "Casa di Andrea",
+          "name": "Via Cassirano, 54",
+          "lon": 12.0042451,
+          "lat": 44.2457233
+        },
+        "duration": 5,
+        "time_windows": [
+          {
+            "earliest": 0,
+            "latest": 1498388848
+          }
+        ]
+      },
+      "size": [
+        1
+      ]
+    }
+  ]
+}

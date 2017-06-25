@@ -16,10 +16,10 @@ import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
-import it.zano.shareride.rest.base.services.BaseService;
-import it.zano.shareride.rest.booking.io.BookingRequest;
-import it.zano.shareride.rest.booking.io.BookingResponse;
-import it.zano.shareride.rest.booking.utils.BookingServiceUtils;
+import it.zano.shareride.rest.service.base.BaseService;
+import it.zano.shareride.rest.service.booking.io.BookingRequest;
+import it.zano.shareride.rest.service.booking.io.BookingResponse;
+import it.zano.shareride.rest.service.booking.utils.BookingServiceUtils;
 
 @Path("/bookingService")
 public class BookingService extends BaseService {
@@ -45,6 +45,8 @@ public class BookingService extends BaseService {
 		//Get the new request (calculating lat and lon if we don't know them)
 		UserRequestEntity newRequest = BookingServiceUtils.convertRequest(bookingRequest);
 		previousRequests.add(newRequest);
+		//Saving in persistence the response
+		persistenceController.saveNewRequest(newRequest);
 		
 		//Asking graphhopper if the new route is viable
 		RouteDoabilityRequest doabilityRequest = new RouteDoabilityRequest();
@@ -53,8 +55,6 @@ public class BookingService extends BaseService {
 		RouteDoabilityResponse doabilityResponse = routeOptimizationController.assessDoability(doabilityRequest);
 		newRequest.setStatus(doabilityResponse.getStatus());
 		
-		//Saving in persistence the response
-		persistenceController.saveNewRequest(newRequest);
 		doabilityResponse.setRequestId(newRequest.getId());
 		
 		//Preparing the response

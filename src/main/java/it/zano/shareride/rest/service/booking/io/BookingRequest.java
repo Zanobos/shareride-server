@@ -1,9 +1,9 @@
-package it.zano.shareride.rest.booking.io;
+package it.zano.shareride.rest.service.booking.io;
 
-import it.zano.shareride.rest.base.io.BaseRequest;
-import it.zano.shareride.rest.booking.entities.AdditionalInfo;
-import it.zano.shareride.rest.booking.entities.Location;
-import it.zano.shareride.rest.booking.entities.UserInfo;
+import it.zano.shareride.rest.service.base.io.BaseRequest;
+import it.zano.shareride.rest.service.booking.entities.AdditionalInfo;
+import it.zano.shareride.rest.service.booking.entities.Location;
+import it.zano.shareride.rest.service.booking.entities.UserInfo;
 
 public class BookingRequest extends BaseRequest {
 

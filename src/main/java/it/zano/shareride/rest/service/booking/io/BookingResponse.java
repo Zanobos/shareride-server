@@ -1,6 +1,6 @@
-package it.zano.shareride.rest.booking.io;
+package it.zano.shareride.rest.service.booking.io;
 
-import it.zano.shareride.rest.base.io.BaseResponse;
+import it.zano.shareride.rest.service.base.io.BaseResponse;
 import it.zano.shareride.utils.EnumStatus;
 
 public class BookingResponse extends BaseResponse {

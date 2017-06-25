@@ -1,4 +1,4 @@
-package it.zano.shareride.rest.booking.entities;
+package it.zano.shareride.rest.service.booking.entities;
 
 public class UserInfo {
 

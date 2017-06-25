@@ -20,7 +20,8 @@ public class Constants {
 		
 		public static final String SEPARATOR = "/";
 		public static final String DIR_CONFIG = "config";
-		public static final String DIR_REQUESTS = "request";
+		public static final String DIR_ROUTE_REQUESTS = "routerequests";
+		public static final String DIR_BOOKING_REQUESTS = "bookingrequests";
 		public static final String FILE_PROPERTIES = "server.properties";
 		public static final String FILE_HIBERNATE = "hibernate.cfg.xml";
 		

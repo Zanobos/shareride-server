@@ -37,6 +37,7 @@
         <!-- Names the annotated entity class -->
 		<mapping class="it.zano.shareride.persistence.entities.LocationEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.VehicleEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.VehicleTypeEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.UserRequestEntity"/>
 		
     </session-factory>

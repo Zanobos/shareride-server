@@ -97,13 +97,12 @@ public class PersistenceController {
 	 */
 	public List<VehicleEntity> loadAvailableTransports(DateTime date, String areaId) {
 
-		String hql = "FROM VehicleEntity V WHERE V.areaId = :area_id";
+		String hql = "FROM VehicleEntity";
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
 		Query query = session.createQuery(hql);
-		query.setParameter("area_id", areaId);
 		
 		@SuppressWarnings("unchecked")
 		List<VehicleEntity> list = query.list();
