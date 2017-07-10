@@ -21,4 +21,10 @@ public class BaseResponse {
 		this.statusMessage = statusMessage;
 	}
 
+	@Override
+	public String toString() {
+		return "BaseResponse [statusCode=" + statusCode + ", statusMessage=" + statusMessage + "]";
+	}
+
+
 }

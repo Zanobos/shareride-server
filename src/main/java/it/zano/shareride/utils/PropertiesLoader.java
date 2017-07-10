@@ -9,16 +9,17 @@ import java.util.logging.Logger;
 public class PropertiesLoader {
 
 	private static final Logger log = Logger.getLogger(PropertiesLoader.class.getName());
-	
-	private static Properties loadProperties() {
-		
-		Properties props = new Properties();
 
-		InputStream inputStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream(Constants.FileSystem.DIR_CONFIG + Constants.FileSystem.SEPARATOR
-						+ Constants.FileSystem.FILE_PROPERTIES);
-		try {
+	private static Properties loadProperties() {
+
+		Properties props = new Properties();
+		String filePath = Constants.FileSystem.DIR_CONFIG + Constants.FileSystem.SEPARATOR + Constants.FileSystem.FILE_PROPERTIES;
+
+		// Try-with-resources
+		try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath)) {
+
 			props.load(inputStream);
+
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "Can not load properties", e);
 		}
@@ -26,12 +27,12 @@ public class PropertiesLoader {
 		return props;
 
 	}
-	
+
 	public static synchronized String getProperty(String key) {
 		Properties properties = loadProperties();
 		return properties.getProperty(key);
 	}
-	
+
 	public static Integer getPropertyInt(String key) {
 		String prop = getProperty(key);
 		return Integer.parseInt(prop);

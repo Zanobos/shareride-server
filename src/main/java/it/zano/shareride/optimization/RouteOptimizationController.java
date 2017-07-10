@@ -33,6 +33,7 @@ import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
+import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
@@ -41,7 +42,7 @@ public class RouteOptimizationController {
 
 	private static final Logger log = Logger.getLogger(RouteOptimizationController.class.getName());
 	
-	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) {
+	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
 
 		log.log(Level.INFO, "In method: assessDoability, " + request.toString());
 		
@@ -71,12 +72,8 @@ public class RouteOptimizationController {
 			response = convertResponse(rsp);
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Route optimization failed: " + e.getMessage(), e);
-			response = new RouteDoabilityResponse();
-			response.setStatus(EnumStatus.REJECTED);
-			//TODO gestione errori PER BENE
-		} catch (InterruptedException e) {
-			log.log(Level.SEVERE, "Route optimization failed: " + e.getMessage(), e);
-		}
+			throw new ApplicationException(e, "Error during routeOptimization: " + request);
+		} 
 
 		return response;
 

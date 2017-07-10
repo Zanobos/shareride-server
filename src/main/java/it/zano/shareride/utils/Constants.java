@@ -4,6 +4,9 @@ public class Constants {
 	
 	public class StatusCodes {
 		
+		public static final String TECHNICAL_ERROR = "TECHNICAL ERROR";
+		public static final String BUSINESS_ERROR = "BUSINESS ERROR";
+		
 		public static final String ACCEPTED = "ACCEPTED";
 		public static final String EVALUATING = "EVALUATING";
 		public static final String REJECTED = "REJECTED";

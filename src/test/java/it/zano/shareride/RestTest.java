@@ -10,6 +10,7 @@ import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.rest.service.booking.io.BookingRequest;
 import it.zano.shareride.rest.service.booking.io.BookingResponse;
+import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.rest.services.BookingService;
 import it.zano.shareride.utils.EnumStatus;
 
@@ -25,7 +26,7 @@ public class RestTest {
 	}
 	
 	@Test
-	public void testBookingService1() {
+	public void testBookingService1() throws ApplicationException, InterruptedException {
 		
 		VehicleEntity vehicle = TestUtils.createVehicle("01");
 		assertNotNull(vehicle);

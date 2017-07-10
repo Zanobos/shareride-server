@@ -11,6 +11,7 @@ import com.graphhopper.directions.api.client.model.GeocodingResponse;
 
 import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
+import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class GeocodingController {
@@ -21,7 +22,7 @@ public class GeocodingController {
 	
 	private static final Logger log = Logger.getLogger(GeocodingController.class.getName());
 
-	public ConvertAddressResponse convertAddress(ConvertAddressRequest convertAddressRequest) {
+	public ConvertAddressResponse convertAddress(ConvertAddressRequest convertAddressRequest) throws ApplicationException {
 
 		log.log(Level.INFO, "In method: convertAddress, " + convertAddressRequest.toString());
 		
@@ -39,6 +40,7 @@ public class GeocodingController {
 			convertAddressResponse.setLon(geocodingPoint.getLng());
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Geocoding failed: " + e.getMessage(), e);
+			throw new ApplicationException(e,"Error during geocoding: " + convertAddressRequest.getAddress());
 		}
 		return convertAddressResponse;
 

@@ -11,6 +11,7 @@ import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.io.BookingRequest;
 import it.zano.shareride.rest.service.booking.io.BookingResponse;
+import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.EnumStatus;
 
 public class BookingServiceUtils {
@@ -32,8 +33,9 @@ public class BookingServiceUtils {
 
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
+	 * @throws ApplicationException 
 	 */
-	public static UserRequestEntity convertRequest(BookingRequest bookingRequest) {
+	public static UserRequestEntity convertRequest(BookingRequest bookingRequest) throws ApplicationException {
 		
 		UserRequestEntity userRequest = new UserRequestEntity();
 		
@@ -64,7 +66,7 @@ public class BookingServiceUtils {
 		return locationEntity;
 	}
 
-	private static void enrichLocation(Location location) {
+	private static void enrichLocation(Location location) throws ApplicationException {
 		
 		GeocodingController geocodingController = new GeocodingController();
 		

@@ -26,4 +26,9 @@ public class RouteDoabilityRequest {
 		this.availableTransports = availableTransports;
 	}
 
+	@Override
+	public String toString() {
+		return "RouteDoabilityRequest [requests=" + requests + ", availableTransports=" + availableTransports + "]";
+	}
+	
 }

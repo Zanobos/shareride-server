@@ -20,6 +20,7 @@ import it.zano.shareride.rest.service.base.BaseService;
 import it.zano.shareride.rest.service.booking.io.BookingRequest;
 import it.zano.shareride.rest.service.booking.io.BookingResponse;
 import it.zano.shareride.rest.service.booking.utils.BookingServiceUtils;
+import it.zano.shareride.rest.service.exception.ApplicationException;
 
 @Path("/bookingService")
 public class BookingService extends BaseService {
@@ -28,7 +29,7 @@ public class BookingService extends BaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/uploadRequest")
-	public BookingResponse uploadRequest(BookingRequest bookingRequest){
+	public BookingResponse uploadRequest(BookingRequest bookingRequest) throws ApplicationException, InterruptedException{
 		
 		//Preparing the controllers
 		PersistenceController persistenceController = PersistenceController.getInstance();
