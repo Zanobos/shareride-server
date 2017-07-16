@@ -12,9 +12,12 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.joda.time.DateTime;
 
+import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
+import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.utils.Constants;
+import it.zano.shareride.utils.PropertiesLoader;
 
 public class PersistenceController {
 
@@ -34,6 +37,11 @@ public class PersistenceController {
 				.build();
 		try {
 			sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+			String environment = PropertiesLoader.getProperty("environment");
+			if(environment.equals("TEST")){
+				saveDefaultVehicle(); //In order to test
+			}
+			
 		} catch (Exception e) {
 			// The registry would be destroyed by the SessionFactory, but we had
 			// trouble building the SessionFactory so destroy it manually.
@@ -51,7 +59,6 @@ public class PersistenceController {
 
 	/**
 	 * Loading from the db the previous requests
-	 * @param input
 	 * @return
 	 */
 	public List<UserRequestEntity> loadPreviousRequests(DateTime date, String areaId) {
@@ -63,6 +70,28 @@ public class PersistenceController {
 		
 		Query query = session.createQuery(hql);
 		query.setParameter("area_id", areaId);
+		
+		@SuppressWarnings("unchecked")
+		List<UserRequestEntity> list = query.list();
+		
+		session.getTransaction().commit();
+        session.close();
+        
+		return list;
+	}
+	
+	/**
+	 * Loading from the db the previous requests
+	 * @return
+	 */
+	public List<UserRequestEntity> loadPreviousRequests(DateTime date) {
+
+		String hql = "FROM UserRequestEntity";
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		Query query = session.createQuery(hql);
 		
 		@SuppressWarnings("unchecked")
 		List<UserRequestEntity> list = query.list();
@@ -127,6 +156,32 @@ public class PersistenceController {
 		session.getTransaction().commit();
 		session.close();
 
+	}
+	
+	/**
+	 * Default vehicle loaded in test environment
+	 */
+	private void saveDefaultVehicle() {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		VehicleEntity vehicle = new VehicleEntity();
+		vehicle.setVehicleId("Van");
+		VehicleTypeEntity type = new VehicleTypeEntity();
+		type.setCapacity(8);
+		type.setTypeId("van");
+		vehicle.setType(type);
+		LocationEntity startAddress = new LocationEntity();
+		startAddress.setAddress("Via Gianfrancesco Fiochetto, 23, 10152 Torino TO");
+		startAddress.setLon(45.076108);
+		startAddress.setLat(7.688482);
+		startAddress.setLocationName("Autorimessa");
+		vehicle.setStartAddress(startAddress);
+		session.save(vehicle);
+		
+		session.getTransaction().commit();
+		session.close();
+		
 	}
 
 }

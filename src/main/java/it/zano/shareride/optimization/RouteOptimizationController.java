@@ -42,6 +42,8 @@ public class RouteOptimizationController {
 
 	private static final Logger log = Logger.getLogger(RouteOptimizationController.class.getName());
 	
+	private static final String ID_REQUEST_TEST = "TEST";
+	
 	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
 
 		log.log(Level.INFO, "In method: assessDoability, " + request.toString());
@@ -55,7 +57,7 @@ public class RouteOptimizationController {
 		JobId jobId;
 		RouteDoabilityResponse response = null;
 		try {
-			log.log(Level.FINE, "In method: assessDoability, OUTBOUND:\n" + body.toString());
+			log.log(Level.FINE, "In method: assessDoability, OUTBOUND:\n" + body);
 			jobId = vrpApi.postVrp(key, body);
 
 			SolutionApi solApi = new SolutionApi();
@@ -143,7 +145,7 @@ public class RouteOptimizationController {
 	private Shipment convertShipment(UserRequestEntity userRequest) {
 		
 		Shipment shipment = new Shipment();
-		shipment.setId(userRequest.getId());
+		shipment.setId(userRequest.getId() != null ? userRequest.getId() : ID_REQUEST_TEST);
 		shipment.setSize(Arrays.asList(userRequest.getNumberOfSeats()));
 		shipment.setPickup(convertStop(userRequest.getPickup(), userRequest.getNumberOfSeats(), true));
 		shipment.setDelivery(convertStop(userRequest.getDelivery(), userRequest.getNumberOfSeats(), false));
@@ -171,6 +173,11 @@ public class RouteOptimizationController {
 		
 		TimeWindow timeWindow = new TimeWindow();
 		Long time = dateTime.getMillis();
+		
+		//I subtract the milliseconds from the start of the actual day
+		Long today = new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfMonth(), 0, 0).getMillis();
+		time = time - today;
+		
 		if(pickup) {
 			timeWindow.setEarliest(time);
 			timeWindow.setLatest(time + 60 * 15);

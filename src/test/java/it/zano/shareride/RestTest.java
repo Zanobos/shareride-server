@@ -30,7 +30,7 @@ public class RestTest {
 		
 		VehicleEntity vehicle = TestUtils.createVehicle("01");
 		assertNotNull(vehicle);
-		persistenceController.saveVehicle(vehicle);
+//		persistenceController.saveVehicle(vehicle);
 		
 		BookingRequest bookingRequest = TestUtils.createRequest("01");
 		BookingResponse bookingResponse = service.uploadRequest(bookingRequest);
