@@ -8,7 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
@@ -37,12 +37,12 @@ public class BookingService extends BaseService {
 		PersistenceController persistenceController = PersistenceController.getInstance();
 		RouteOptimizationController routeOptimizationController = new RouteOptimizationController();
 		
-		//Load from the db the previous request
-		DateTime dateTime = BookingServiceUtils.getDateTime(bookingRequest);
-		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(dateTime);
+		//Load from the db the previous requests of the same day
+		LocalDate date = BookingServiceUtils.getDate(bookingRequest);
+		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(date);
 		
 		//Load from the db the vehicles
-		List<VehicleEntity> availableTransports = persistenceController.loadAvailableTransports(dateTime,null);
+		List<VehicleEntity> availableTransports = persistenceController.loadAvailableTransports(date,null);
 		
 		//Get the new request (calculating lat and lon if we don't know them)
 		UserRequestEntity newRequest = BookingServiceUtils.convertRequest(bookingRequest);
@@ -74,12 +74,12 @@ public class BookingService extends BaseService {
 		RouteOptimizationController routeOptimizationController = new RouteOptimizationController();
 		
 		//Load from the db the previous request
-		DateTime dateTime = BookingServiceUtils.getDateTime(bookingRequest);
+		LocalDate date = BookingServiceUtils.getDate(bookingRequest);
 		String areaId = bookingRequest.getAdditionalInfo().getAreaId();
-		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(dateTime,areaId);
+		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(date,areaId);
 		
 		//Load from the db the vehicles
-		List<VehicleEntity> availableTransports = persistenceController.loadAvailableTransports(dateTime,areaId);
+		List<VehicleEntity> availableTransports = persistenceController.loadAvailableTransports(date,areaId);
 		
 		//Get the new request (calculating lat and lon if we don't know them)
 		UserRequestEntity newRequest = BookingServiceUtils.convertRequest(bookingRequest);

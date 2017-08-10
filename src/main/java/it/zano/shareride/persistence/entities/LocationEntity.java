@@ -5,6 +5,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import it.zano.shareride.persistence.PersistenceController;
 
@@ -16,8 +18,10 @@ public class LocationEntity extends BaseEntity {
 	private String address;
 	private Double lat;
 	private Double lon;
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime dateTime;
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate date;
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
+	private LocalTime time;
 
 	public String getLocationName() {
 		return locationName;
@@ -51,12 +55,20 @@ public class LocationEntity extends BaseEntity {
 		this.lon = lon;
 	}
 
-	public DateTime getDateTime() {
-		return dateTime;
+	public LocalDate getDate() {
+		return date;
 	}
 
-	public void setDateTime(DateTime dateTime) {
-		this.dateTime = dateTime;
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public LocalTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalTime time) {
+		this.time = time;
 	}
 
 }

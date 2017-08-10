@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,20 +26,22 @@ public class HibernateTest {
 	@Test
 	public void testHibernateRequests() {
 		
-		DateTime dateTime = new DateTime();
+		LocalDate date = new LocalDate();
+		LocalTime time = new LocalTime();
 		String areaId = "TO";
 		
 		UserRequestEntity userRequest = new UserRequestEntity();
 		
 		userRequest.setAreaId(areaId);
-		userRequest.setDateTime(dateTime);
+		userRequest.setLocalDate(date);
 		userRequest.setNeedAssistance(false);
 		userRequest.setNumberOfSeats(1);
 		userRequest.setUserName("Andrea Zanotti");
 		
 		LocationEntity pickup = new LocationEntity();
 		pickup.setAddress("Via della Lepre, 43");
-		pickup.setDateTime(dateTime);
+		pickup.setDate(date);
+		pickup.setTime(time);
 		pickup.setLat(44.2189271);
 		pickup.setLocationName("Casa di Vale");
 		pickup.setLon(11.9965901);
@@ -45,7 +49,8 @@ public class HibernateTest {
 		
 		LocationEntity delivery = new LocationEntity();
 		delivery.setAddress("Via Cassirano, 54");
-		delivery.setDateTime(null);
+		delivery.setDate(date);
+		delivery.setTime(time);
 		delivery.setLat(44.2457233);
 		delivery.setLocationName("Casa di Andrea");
 		delivery.setLon(12.0042451);
@@ -53,7 +58,7 @@ public class HibernateTest {
 		
 		controller.saveNewRequest(userRequest);
 		
-		List<UserRequestEntity> previousRequests = controller.loadPreviousRequests(dateTime, areaId);
+		List<UserRequestEntity> previousRequests = controller.loadPreviousRequests(date, areaId);
 		
 		assertEquals(1,previousRequests.size());
 		

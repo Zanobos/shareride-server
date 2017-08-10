@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalTime;
 
 import com.graphhopper.directions.api.client.ApiException;
 import com.graphhopper.directions.api.client.api.SolutionApi;
@@ -161,29 +163,31 @@ public class RouteOptimizationController {
 		Long duration = (long) (stopTimePerPerson * numberOfSeats);
 		stop.setDuration(duration);
 		
-		stop.setTimeWindows(Arrays.asList(convertTimeWindow(location.getDateTime(),pickup)));
+		stop.setTimeWindows(Arrays.asList(convertTimeWindow(location.getTime(),pickup)));
 		return stop;
 	}
 
-	private TimeWindow convertTimeWindow(DateTime dateTime, boolean pickup) {
+	private TimeWindow convertTimeWindow(LocalTime time, boolean pickup) {
 		//TODO
-		if(dateTime == null){
+		if(time == null){
 			return null;
 		}
 		
 		TimeWindow timeWindow = new TimeWindow();
-		Long time = dateTime.getMillis();
 		
-		//I subtract the milliseconds from the start of the actual day
-		Long today = new DateTime(dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfMonth(), 0, 0).getMillis();
-		time = time - today;
+		DateTime timeIfToday = time.toDateTimeToday(); //I convert the time to a DateTime using today as reference for the date
+		DateTime todayStartOfDay = new DateTime().withTimeAtStartOfDay();
+		
+		Duration duration = new Duration(todayStartOfDay, timeIfToday);
+
+		Long seconds = duration.getStandardSeconds();
 		
 		if(pickup) {
-			timeWindow.setEarliest(time);
-			timeWindow.setLatest(time + 60 * 15);
+			timeWindow.setEarliest(seconds);
+			timeWindow.setLatest(seconds + 60 * 15);
 		} else {
 			timeWindow.setEarliest(0l); //TODO
-			timeWindow.setLatest(time);
+			timeWindow.setLatest(seconds);
 		}
 		return timeWindow;
 	}

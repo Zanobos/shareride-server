@@ -1,6 +1,7 @@
 package it.zano.shareride.rest.service.booking.utils;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import it.zano.shareride.geocoding.GeocodingController;
 import it.zano.shareride.geocoding.io.ConvertAddressRequest;
@@ -20,34 +21,44 @@ import it.zano.shareride.utils.EnumStatus;
 
 public class BookingServiceUtils {
 
+	public static LocalDate getDate(CheckPathRequest request) {
+		
+		LocalDate result = request.getDelivery().getDate();
+		if(result == null) {
+			result = request.getPickup().getDate();
+		}
+		
+		return result;
+	}
 	
-	public static DateTime getDateTime(CheckPathRequest request) {
+	public static LocalTime getTime(CheckPathRequest request) {
 		
-		Long date = request.getDelivery().getTime();
-		if(date == null) {
-			date = request.getPickup().getTime();
+		LocalTime result = request.getDelivery().getTime();
+		if(result == null) {
+			result = request.getPickup().getTime();
 		}
 		
-		DateTime dateTime = null;
-		if(date != null) {
-			dateTime = new DateTime(date);
-		}
-		return dateTime;
+		return result;
 	}
 
+	public static LocalDate getDate(BookingRequest request) {
+		
+		LocalDate result = request.getDelivery().getDate();
+		if(result == null) {
+			result = request.getPickup().getDate();
+		}
+		
+		return result;
+	}
 	
-	public static DateTime getDateTime(BookingRequest request) {
+	public static LocalTime getTime(BookingRequest request) {
 		
-		Long date = request.getDelivery().getTime();
-		if(date == null) {
-			date = request.getPickup().getTime();
+		LocalTime result = request.getDelivery().getTime();
+		if(result == null) {
+			result = request.getPickup().getTime();
 		}
 		
-		DateTime dateTime = null;
-		if(date != null) {
-			dateTime = new DateTime(date);
-		}
-		return dateTime;
+		return result;
 	}
 
 	/**
@@ -62,7 +73,8 @@ public class BookingServiceUtils {
 		enrichLocation(bookingRequest.getPickup());
 		
 		userRequest.setAreaId(bookingRequest.getAdditionalInfo().getAreaId());
-		userRequest.setDateTime(getDateTime(bookingRequest));
+		userRequest.setLocalDate(getDate(bookingRequest));
+		userRequest.setLocalTime(getTime(bookingRequest));
 		userRequest.setNeedAssistance(bookingRequest.getAdditionalInfo().getNeedAssistance());
 		userRequest.setNumberOfSeats(bookingRequest.getAdditionalInfo().getNumberOfSeats());
 		userRequest.setUserName(bookingRequest.getUserInfo().getName());
@@ -85,7 +97,8 @@ public class BookingServiceUtils {
 		enrichLocation(request.getPickup());
 		
 		userRequest.setAreaId(request.getAdditionalInfo().getAreaId());
-		userRequest.setDateTime(getDateTime(request));
+		userRequest.setLocalDate(getDate(request));
+		userRequest.setLocalTime(getTime(request));
 		userRequest.setNeedAssistance(request.getAdditionalInfo().getNeedAssistance());
 		userRequest.setNumberOfSeats(request.getAdditionalInfo().getNumberOfSeats());
 		userRequest.setUserName(request.getUserInfo().getName());
@@ -100,7 +113,8 @@ public class BookingServiceUtils {
 		LocationEntity locationEntity = new LocationEntity();
 		
 		locationEntity.setAddress(location.getAddress());
-		locationEntity.setDateTime(location.getTime() != null ? new DateTime(location.getTime()) : null);
+		locationEntity.setDate(location.getDate());
+		locationEntity.setTime(location.getTime());
 		locationEntity.setLat(location.getLat());
 		locationEntity.setLocationName(location.getLocationName());
 		locationEntity.setLon(location.getLon());

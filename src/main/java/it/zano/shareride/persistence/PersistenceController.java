@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
@@ -61,7 +61,7 @@ public class PersistenceController {
 	 * Loading from the db the previous requests
 	 * @return
 	 */
-	public List<UserRequestEntity> loadPreviousRequests(DateTime date, String areaId) {
+	public List<UserRequestEntity> loadPreviousRequests(LocalDate date, String areaId) {
 
 		String hql = "FROM UserRequestEntity R WHERE R.areaId = :area_id";
 		
@@ -84,7 +84,7 @@ public class PersistenceController {
 	 * Loading from the db the previous requests
 	 * @return
 	 */
-	public List<UserRequestEntity> loadPreviousRequests(DateTime date) {
+	public List<UserRequestEntity> loadPreviousRequests(LocalDate date) {
 
 		String hql = "FROM UserRequestEntity";
 		
@@ -124,7 +124,7 @@ public class PersistenceController {
 	 * @param areaId
 	 * @return
 	 */
-	public List<VehicleEntity> loadAvailableTransports(DateTime date, String areaId) {
+	public List<VehicleEntity> loadAvailableTransports(LocalDate date, String areaId) {
 
 		String hql = "FROM VehicleEntity";
 		
