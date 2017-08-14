@@ -115,13 +115,21 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>${tomcat7-maven-plugin.version}</version>
+				<!--
 				<configuration>
 					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
 					<username>zanobos</username>
 					<password>zanobos</password>
 					<update>true</update>
+				</configuration> 
+				 -->
+				 
+				<configuration>
+					<server>RemoteServer</server>
+					<url>http://94.177.214.113:8080/manager/text</url>
 				</configuration>
+				
 			</plugin>
 		</plugins>
 	</build>
