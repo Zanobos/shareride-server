@@ -3,13 +3,19 @@ package it.zano.shareride.rest.service.booking.entities;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.joda.deser.LocalTimeDeserializer;
+
 public class Location {
 
 	private String locationName;
 	private String address;
 	private Double lat;
 	private Double lon;
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate date;
+	@JsonDeserialize(using = LocalTimeDeserializer.class)
 	private LocalTime time;
 
 	public String getLocationName() {
