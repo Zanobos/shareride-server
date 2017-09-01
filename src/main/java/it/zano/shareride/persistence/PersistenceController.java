@@ -39,6 +39,7 @@ public class PersistenceController {
 			sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
 			String environment = PropertiesLoader.getProperty("environment");
 			if(environment.equals("TEST")){
+				log.log(Level.INFO, "Adding a default vehicle to the db");
 				saveDefaultVehicle(); //In order to test
 			}
 			
@@ -50,7 +51,7 @@ public class PersistenceController {
 		}
 	}
 
-	public static PersistenceController getInstance() {
+	public static synchronized PersistenceController getInstance() {
 		if (instance == null) {
 			instance = new PersistenceController();
 		}

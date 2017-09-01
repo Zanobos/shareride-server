@@ -44,4 +44,12 @@ public class CheckPathRequest extends BaseRequest {
 		this.additionalInfo = additionalInfo;
 	}
 
+	@Override
+	public String toString() {
+		return "CheckPathRequest [userInfo=" + userInfo + ", pickup=" + pickup + ", delivery=" + delivery
+				+ ", additionalInfo=" + additionalInfo + "]";
+	}
+	
+	
+
 }

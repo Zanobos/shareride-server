@@ -1,6 +1,8 @@
 package it.zano.shareride.rest.services;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -27,25 +29,29 @@ import it.zano.shareride.rest.service.exception.ApplicationException;
 @Path("/bookingService")
 public class BookingService extends BaseService {
 	
+	private static final Logger log = Logger.getLogger(BookingService.class.getName());
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/checkPath")
-	public CheckPathResponse checkPath(CheckPathRequest bookingRequest) throws ApplicationException, InterruptedException{
+	public CheckPathResponse checkPath(CheckPathRequest checkPathRequest) throws ApplicationException, InterruptedException{
+		
+		log.log(Level.INFO, "REQUEST:<<" + checkPathRequest.toString() + ">>");
 		
 		//Preparing the controllers
 		PersistenceController persistenceController = PersistenceController.getInstance();
 		RouteOptimizationController routeOptimizationController = new RouteOptimizationController();
 		
 		//Load from the db the previous requests of the same day
-		LocalDate date = BookingServiceUtils.getDate(bookingRequest);
+		LocalDate date = BookingServiceUtils.getDate(checkPathRequest);
 		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(date);
 		
 		//Load from the db the vehicles
 		List<VehicleEntity> availableTransports = persistenceController.loadAvailableTransports(date,null);
 		
 		//Get the new request (calculating lat and lon if we don't know them)
-		UserRequestEntity newRequest = BookingServiceUtils.convertRequest(bookingRequest);
+		UserRequestEntity newRequest = BookingServiceUtils.convertRequest(checkPathRequest);
 		previousRequests.add(newRequest);
 		
 		//Asking graphhopper if the new route is viable
@@ -58,9 +64,11 @@ public class BookingService extends BaseService {
 		doabilityResponse.setRequestId(newRequest.getId());
 		
 		//Preparing the response
-		CheckPathResponse bookingResponse = BookingServiceUtils.convertCheckPathResponse(doabilityResponse);
+		CheckPathResponse checkPathResponse = BookingServiceUtils.convertCheckPathResponse(doabilityResponse);
 		
-		return bookingResponse;
+		log.log(Level.INFO, "RESPONSE:<<" + checkPathResponse.toString() + ">>");
+		
+		return checkPathResponse;
 	}
 	
 	@POST

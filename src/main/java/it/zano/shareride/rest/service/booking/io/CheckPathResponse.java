@@ -24,4 +24,11 @@ public class CheckPathResponse extends BaseResponse {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "CheckPathResponse [requestId=" + requestId + ", status=" + status + "]";
+	}
+	
+	
+
 }

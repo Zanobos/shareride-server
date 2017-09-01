@@ -48,7 +48,7 @@ public class RouteOptimizationController {
 	
 	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
 
-		log.log(Level.INFO, "In method: assessDoability, " + request.toString());
+		log.log(Level.INFO, "INPUT:<<" + request.toString() + ">>");
 		
 		String key = PropertiesLoader.getProperty("graphopper.key");
 		int waitTime = PropertiesLoader.getPropertyInt("routeoptimization.waitTime");
@@ -57,29 +57,34 @@ public class RouteOptimizationController {
 
 		Request body = convertRequest(request);
 		JobId jobId;
-		RouteDoabilityResponse response = null;
+		RouteDoabilityResponse routeDoabilityResponse = null;
 		try {
-			log.log(Level.FINE, "In method: assessDoability, OUTBOUND:\n" + body);
+			log.log(Level.INFO, "OUTBOUND:<<" + body + ">>");
 			jobId = vrpApi.postVrp(key, body);
 
 			SolutionApi solApi = new SolutionApi();
-			Response rsp;
+			Response response;
 
 			while (true) {
-				rsp = solApi.getSolution(key, jobId.getJobId());
-				if (rsp.getStatus().equals(Response.StatusEnum.FINISHED)) {
+				response = solApi.getSolution(key, jobId.getJobId());
+				if (response.getStatus().equals(Response.StatusEnum.FINISHED)) {
 					break;
 				}
 				Thread.sleep(waitTime);
 			}
 			
-			response = convertResponse(rsp);
+			log.log(Level.INFO, "INBOUND:<<" + response + ">>");
+			
+			routeDoabilityResponse = convertResponse(response);
+			
+			log.log(Level.INFO, "OUTPUT:<<" + routeDoabilityResponse.toString() + ">>");
+			
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Route optimization failed: " + e.getMessage(), e);
 			throw new ApplicationException(e, "Error during routeOptimization: " + request);
 		} 
 
-		return response;
+		return routeDoabilityResponse;
 
 	}
 

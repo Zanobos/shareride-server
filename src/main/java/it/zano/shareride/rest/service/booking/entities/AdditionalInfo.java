@@ -41,4 +41,12 @@ public class AdditionalInfo {
 		this.periodicity = periodicity;
 	}
 
+	@Override
+	public String toString() {
+		return "AdditionalInfo [numberOfSeats=" + numberOfSeats + ", needAssistance=" + needAssistance + ", areaId="
+				+ areaId + ", periodicity=" + periodicity + "]";
+	}
+	
+	
+
 }

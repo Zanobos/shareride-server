@@ -21,4 +21,10 @@ public class UserInfo {
 		this.userId = userId;
 	}
 
+	@Override
+	public String toString() {
+		return "UserInfo [name=" + name + ", userId=" + userId + "]";
+	}
+	
+
 }

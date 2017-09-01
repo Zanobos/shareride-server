@@ -1,5 +1,6 @@
 package it.zano.shareride.optimization.io;
 
+import java.util.Arrays;
 import java.util.List;
 
 import it.zano.shareride.persistence.entities.VehicleEntity;
@@ -28,7 +29,7 @@ public class RouteDoabilityRequest {
 
 	@Override
 	public String toString() {
-		return "RouteDoabilityRequest [requests=" + requests + ", availableTransports=" + availableTransports + "]";
+		return "RouteDoabilityRequest [requests=" + Arrays.toString(requests.toArray()) + ", availableTransports=" + Arrays.toString(availableTransports.toArray()) + "]";
 	}
 	
 }

@@ -23,4 +23,11 @@ public class RouteDoabilityResponse {
 		this.requestId = requestId;
 	}
 
+	@Override
+	public String toString() {
+		return "RouteDoabilityResponse [status=" + status + ", requestId=" + requestId + "]";
+	}
+	
+	
+
 }

@@ -29,7 +29,7 @@ public class GeocodingController {
 	public ConvertAddressResponse convertAddress(ConvertAddressRequest convertAddressRequest)
 			throws ApplicationException {
 
-		log.log(Level.INFO, "In method: convertAddress, " + convertAddressRequest.toString());
+		log.log(Level.INFO, "INPUT:<<" + convertAddressRequest.toString() + ">>");
 
 		GeocodingApi geocoding = new GeocodingApi();
 		String key = PropertiesLoader.getProperty("graphopper.key");
