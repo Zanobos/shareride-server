@@ -80,7 +80,7 @@ public class RouteOptimizationController {
 			log.log(Level.INFO, "OUTPUT:<<" + routeDoabilityResponse.toString() + ">>");
 			
 		} catch (ApiException e) {
-			log.log(Level.SEVERE, "Route optimization failed: " + e.getMessage(), e);
+			log.log(Level.SEVERE, "Route optimization failed: " + e.getMessage() + e.getResponseBody() != null ? e.getResponseBody() : "", e);
 			throw new ApplicationException(e, "Error during routeOptimization: " + request);
 		} 
 

@@ -108,7 +108,7 @@ public class PersistenceController {
 	 * 
 	 * @param newRequest
 	 */
-	public void saveNewRequest(UserRequestEntity newRequest) {
+	public void saveRequest(UserRequestEntity newRequest) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
@@ -118,6 +118,24 @@ public class PersistenceController {
 		session.close();
 
 	}
+	
+	public UserRequestEntity loadRequest(String requestId) {
+		
+		String hql = "FROM UserRequestEntity R WHERE R.id = :id";
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("id", requestId);
+		
+		UserRequestEntity userRequest = (UserRequestEntity) query.uniqueResult();
+		
+		session.getTransaction().commit();
+		session.close();
+		
+		return userRequest;
+	}
 
 	/**
 	 * Loading from the db available transports
@@ -125,7 +143,7 @@ public class PersistenceController {
 	 * @param areaId
 	 * @return
 	 */
-	public List<VehicleEntity> loadAvailableTransports(LocalDate date, String areaId) {
+	public List<VehicleEntity> loadAvailableVehicles(LocalDate date, String areaId) {
 
 		String hql = "FROM VehicleEntity";
 		
@@ -144,7 +162,7 @@ public class PersistenceController {
 	}
 	
 	/**
-	 * Saving a new request
+	 * Saving a new vehicle
 	 * 
 	 * @param vehicleEntity
 	 */

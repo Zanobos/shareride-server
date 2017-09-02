@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.persistence.entities.VehicleEntity;
-import it.zano.shareride.rest.service.booking.io.BookingRequest;
-import it.zano.shareride.rest.service.booking.io.BookingResponse;
+import it.zano.shareride.rest.service.booking.io.ConfirmRequestRequest;
+import it.zano.shareride.rest.service.booking.io.ConfirmRequestResponse;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.rest.services.BookingService;
 import it.zano.shareride.utils.EnumStatus;

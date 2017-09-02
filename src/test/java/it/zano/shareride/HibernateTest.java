@@ -1,10 +1,9 @@
 package it.zano.shareride;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.BeforeClass;
@@ -56,9 +55,9 @@ public class HibernateTest {
 		delivery.setLon(12.0042451);
 		userRequest.setDelivery(delivery);
 		
-		controller.saveNewRequest(userRequest);
+		controller.saveRequest(userRequest);
 		
-		List<UserRequestEntity> previousRequests = controller.loadPreviousRequests(date, areaId);
+		List<UserRequestEntity> previousRequests = controller.loadPreviousRequests(date);
 		
 		assertEquals(1,previousRequests.size());
 		

@@ -12,8 +12,6 @@ import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.service.booking.entities.Location;
-import it.zano.shareride.rest.service.booking.io.BookingRequest;
-import it.zano.shareride.rest.service.booking.io.BookingResponse;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathResponse;
 import it.zano.shareride.rest.service.exception.ApplicationException;
@@ -41,50 +39,6 @@ public class BookingServiceUtils {
 		return result;
 	}
 
-	public static LocalDate getDate(BookingRequest request) {
-		
-		LocalDate result = request.getDelivery().getDate();
-		if(result == null) {
-			result = request.getPickup().getDate();
-		}
-		
-		return result;
-	}
-	
-	public static LocalTime getTime(BookingRequest request) {
-		
-		LocalTime result = request.getDelivery().getTime();
-		if(result == null) {
-			result = request.getPickup().getTime();
-		}
-		
-		return result;
-	}
-
-	/**
-	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
-	 * @throws ApplicationException 
-	 */
-	public static UserRequestEntity convertRequest(BookingRequest bookingRequest) throws ApplicationException {
-		
-		UserRequestEntity userRequest = new UserRequestEntity();
-		
-		enrichLocation(bookingRequest.getDelivery());
-		enrichLocation(bookingRequest.getPickup());
-		
-		userRequest.setAreaId(bookingRequest.getAdditionalInfo().getAreaId());
-		userRequest.setLocalDate(getDate(bookingRequest));
-		userRequest.setLocalTime(getTime(bookingRequest));
-		userRequest.setNeedAssistance(bookingRequest.getAdditionalInfo().getNeedAssistance());
-		userRequest.setNumberOfSeats(bookingRequest.getAdditionalInfo().getNumberOfSeats());
-		userRequest.setUserName(bookingRequest.getUserInfo().getName());
-		userRequest.setDelivery(convertLocation(bookingRequest.getDelivery()));
-		userRequest.setPickup(convertLocation(bookingRequest.getPickup()));
-		userRequest.setStatus(EnumStatus.TOBEDONE);
-		
-		return userRequest;
-	}
-	
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
 	 * @throws ApplicationException 
@@ -151,16 +105,6 @@ public class BookingServiceUtils {
 		
 	}
 
-	public static BookingResponse convertResponse(RouteDoabilityResponse doabilityResponse) {
-		
-		BookingResponse response = new BookingResponse();
-		
-		response.setStatus(doabilityResponse.getStatus());
-		response.setRequestId(doabilityResponse.getRequestId());
-		
-		return response;
-	}
-	
 	public static CheckPathResponse convertCheckPathResponse(RouteDoabilityResponse doabilityResponse) {
 		
 		CheckPathResponse response = new CheckPathResponse();

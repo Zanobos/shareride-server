@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.zano.shareride.persistence.entities.VehicleEntity;
-import it.zano.shareride.rest.service.booking.io.BookingRequest;
+import it.zano.shareride.rest.service.booking.io.ConfirmRequestRequest;
 import it.zano.shareride.utils.Constants;
 
 public class TestUtils {
@@ -17,15 +17,15 @@ public class TestUtils {
 	private static final String baseFileRequest = "Request_";
 	private static final String baseFileVehicle = "Vehicle_";
 	
-	public static BookingRequest createRequest(String number) {
+	public static ConfirmRequestRequest createRequest(String number) {
 
-		BookingRequest request = null;
+		ConfirmRequestRequest request = null;
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		InputStream inputStream = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(Constants.FileSystem.DIR_BOOKING_REQUESTS + Constants.FileSystem.SEPARATOR + baseFileRequest + number + suffix);
 		Reader reader = new InputStreamReader(inputStream);
-		request = gson.fromJson(reader, BookingRequest.class);
+		request = gson.fromJson(reader, ConfirmRequestRequest.class);
 
 		return request;
 	}
