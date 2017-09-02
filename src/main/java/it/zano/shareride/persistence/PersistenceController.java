@@ -174,8 +174,8 @@ public class PersistenceController {
 		vehicle.setType(type);
 		LocationEntity startAddress = new LocationEntity();
 		startAddress.setAddress("Via Gianfrancesco Fiochetto, 23, 10152 Torino TO");
-		startAddress.setLon(45.076108);
-		startAddress.setLat(7.688482);
+		startAddress.setLat(45.076108);
+		startAddress.setLon(7.688482);
 		startAddress.setLocationName("Autorimessa");
 		vehicle.setStartAddress(startAddress);
 		session.save(vehicle);
