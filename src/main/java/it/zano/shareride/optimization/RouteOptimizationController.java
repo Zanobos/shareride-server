@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +15,8 @@ import org.joda.time.LocalTime;
 import com.graphhopper.directions.api.client.ApiException;
 import com.graphhopper.directions.api.client.api.SolutionApi;
 import com.graphhopper.directions.api.client.api.VrpApi;
+import com.graphhopper.directions.api.client.model.Activity;
+import com.graphhopper.directions.api.client.model.Activity.TypeEnum;
 import com.graphhopper.directions.api.client.model.Address;
 import com.graphhopper.directions.api.client.model.Algorithm;
 import com.graphhopper.directions.api.client.model.Algorithm.ObjectiveEnum;
@@ -23,6 +24,7 @@ import com.graphhopper.directions.api.client.model.Algorithm.ProblemTypeEnum;
 import com.graphhopper.directions.api.client.model.JobId;
 import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Response;
+import com.graphhopper.directions.api.client.model.Route;
 import com.graphhopper.directions.api.client.model.Shipment;
 import com.graphhopper.directions.api.client.model.SolutionUnassigned;
 import com.graphhopper.directions.api.client.model.Stop;
@@ -34,10 +36,13 @@ import com.graphhopper.directions.api.client.model.VehicleType.ProfileEnum;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
+import it.zano.shareride.persistence.entities.RouteEntity;
+import it.zano.shareride.persistence.entities.RouteLocationEntity;
+import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
-import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.utils.EnumRouteLocationType;
 import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -45,7 +50,7 @@ public class RouteOptimizationController {
 
 	private static final Logger log = Logger.getLogger(RouteOptimizationController.class.getName());
 	
-	private static final String ID_REQUEST_TEST = "TEST";
+	private static final long MILLIS_IN_SECOND = 1000l;
 	
 	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
 
@@ -98,9 +103,37 @@ public class RouteOptimizationController {
 			status = EnumStatus.ACCEPTED;
 		}
 		
-		//TODO the exact time and location of pickups
+		List<RouteEntity> routes = new ArrayList<RouteEntity>();
+		
+		for(Route route : response.getSolution().getRoutes()){
+			RouteEntity routeEntity = new RouteEntity();
+			routeEntity.setVehicleId(route.getVehicleId());
+			routeEntity.setCompletionTime(route.getCompletionTime());
+			routeEntity.setDistance(route.getDistance());
+			List<RouteLocationEntity> routeLocations = new ArrayList<RouteLocationEntity>();
+			for(Activity activity : route.getActivities()) {
+				RouteLocationEntity routeLocation = new RouteLocationEntity();
+				routeLocation.setArrivalTime(convertTime(activity.getArrTime()));
+				routeLocation.setEndTime(convertTime(activity.getEndTime()));
+				routeLocation.setLocationEntityId(activity.getLocationId());
+				routeLocation.setLoadBefore((activity.getLoadBefore() != null && !activity.getLoadBefore().isEmpty()) ? activity.getLoadBefore().get(0) : null);
+				routeLocation.setLoadAfter((activity.getLoadAfter() != null && !activity.getLoadAfter().isEmpty()) ? activity.getLoadAfter().get(0) : null);
+				routeLocation.setRouteLocationType(convertActivityType(activity.getType()));
+				routeLocations.add(routeLocation);
+			}
+			routeEntity.setRouteLocations(routeLocations);
+			
+			routes.add(routeEntity);
+		}
+
+		doabilityResponse.setRoutes(routes);
 		doabilityResponse.setStatus(status);
 		return doabilityResponse;
+	}
+
+	private EnumRouteLocationType convertActivityType(TypeEnum type) {
+		EnumRouteLocationType locationType = EnumRouteLocationType.valueOf(type.name());
+		return locationType;
 	}
 
 	private Request convertRequest(RouteDoabilityRequest routeDoabilityRequest) {
@@ -153,7 +186,7 @@ public class RouteOptimizationController {
 	private Shipment convertShipment(UserRequestEntity userRequest) {
 		
 		Shipment shipment = new Shipment();
-		shipment.setId(userRequest.getId() != null ? userRequest.getId() : ID_REQUEST_TEST);
+		shipment.setId(userRequest.getId());
 		shipment.setSize(Arrays.asList(userRequest.getNumberOfSeats()));
 		shipment.setPickup(convertStop(userRequest.getPickup(), userRequest.getNumberOfSeats(), true));
 		shipment.setDelivery(convertStop(userRequest.getDelivery(), userRequest.getNumberOfSeats(), false));
@@ -174,19 +207,14 @@ public class RouteOptimizationController {
 	}
 
 	private TimeWindow convertTimeWindow(LocalTime time, boolean pickup) {
-		//TODO
+
 		if(time == null){
 			return null;
 		}
 		
-		TimeWindow timeWindow = new TimeWindow();
-		
-		DateTime timeIfToday = time.toDateTimeToday(); //I convert the time to a DateTime using today as reference for the date
-		DateTime todayStartOfDay = new DateTime().withTimeAtStartOfDay();
-		
-		Duration duration = new Duration(todayStartOfDay, timeIfToday);
+        TimeWindow timeWindow = new TimeWindow();
 
-		Long seconds = duration.getStandardSeconds();
+		Long seconds = convertTime(time);
 		
 		if(pickup) {
 			timeWindow.setEarliest(seconds);
@@ -236,9 +264,29 @@ public class RouteOptimizationController {
 		Address address = new Address();
 		address.setLat(location.getLat());
 		address.setLon(location.getLon());
-		address.setLocationId(UUID.randomUUID().toString());
+		address.setLocationId(location.getId());
 		address.setName(location.getLocationName() + "||" + location.getAddress());
 		return address;
+	}
+	
+	private Long convertTime(LocalTime time) {
+		
+		DateTime timeIfToday = time.toDateTimeToday(); //I convert the time to a DateTime using today as reference for the date
+		DateTime todayStartOfDay = new DateTime().withTimeAtStartOfDay();
+		
+		Duration duration = new Duration(todayStartOfDay, timeIfToday);
+
+		Long seconds = duration.getStandardSeconds();
+		
+		return seconds;
+	}
+	
+	private LocalTime convertTime(Long timeAsSeconds){
+		if (timeAsSeconds == null) {
+			return null;
+		}
+		LocalTime time = LocalTime.fromMillisOfDay(timeAsSeconds * MILLIS_IN_SECOND);
+		return time;
 	}
 
 }

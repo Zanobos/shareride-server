@@ -3,8 +3,10 @@ package it.zano.shareride.persistence.entities;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import it.zano.shareride.persistence.PersistenceController;
+
 @Entity
-@Table(name = "VEHICLE_TYPES")
+@Table(name = PersistenceController.VEHICLE_TYPES)
 public class VehicleTypeEntity extends BaseEntity {
 
 	private String typeId;

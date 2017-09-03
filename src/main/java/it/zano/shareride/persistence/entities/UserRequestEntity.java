@@ -11,10 +11,11 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.utils.EnumStatus;
 
 @Entity
-@Table(name = "USER_REQUESTS")
+@Table(name = PersistenceController.USER_REQUESTS)
 public class UserRequestEntity extends BaseEntity {
 
 	private String userName;

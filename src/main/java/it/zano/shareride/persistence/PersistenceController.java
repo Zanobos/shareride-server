@@ -25,6 +25,8 @@ public class PersistenceController {
 	public static final String LOCATIONS = "LOCATIONS";
 	public static final String USER_REQUESTS = "USER_REQUESTS";
 	public static final String VEHICLES = "VEHICLES";
+	public static final String VEHICLE_TYPES = "VEHICLE_TYPES";
+	public static final String ROUTES = "ROUTES";
 	
 	private static PersistenceController instance;
 	private static final Logger log = Logger.getLogger(PersistenceController.class.getName());

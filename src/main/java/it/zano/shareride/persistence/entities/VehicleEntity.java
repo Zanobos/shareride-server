@@ -5,8 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import it.zano.shareride.persistence.PersistenceController;
+
 @Entity
-@Table(name = "VEHICLES")
+@Table(name = PersistenceController.VEHICLES)
 public class VehicleEntity extends BaseEntity {
 
 	private String vehicleId;

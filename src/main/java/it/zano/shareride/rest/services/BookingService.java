@@ -60,13 +60,16 @@ public class BookingService extends BaseService {
 		doabilityRequest.setRequests(previousRequests);
 		doabilityRequest.setAvailableTransports(availableTransports);
 		
+		//Saving the request in persistence (in order to generate an id to all the entities)
+		persistenceController.saveRequest(newRequest);
+		
 		//Assigning the response to the request
 		RouteDoabilityResponse doabilityResponse = routeOptimizationController.assessDoability(doabilityRequest);
-		newRequest.setStatus(doabilityResponse.getStatus());
-		
-		//Saving the request in persistence and returning to the user the id
-		persistenceController.saveRequest(newRequest);
 		doabilityResponse.setRequestId(newRequest.getId());
+		
+		//Updating the status
+		newRequest.setStatus(doabilityResponse.getStatus());
+		persistenceController.updateRequest(newRequest);
 		
 		//Preparing the response
 		CheckPathResponse checkPathResponse = BookingServiceUtils.convertCheckPathResponse(doabilityResponse);
