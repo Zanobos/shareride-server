@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -235,8 +236,8 @@ public class RouteOptimizationController {
 		Address address = new Address();
 		address.setLat(location.getLat());
 		address.setLon(location.getLon());
-		address.setLocationId(location.getLocationName());
-		address.setName(location.getAddress());
+		address.setLocationId(UUID.randomUUID().toString());
+		address.setName(location.getLocationName() + "||" + location.getAddress());
 		return address;
 	}
 

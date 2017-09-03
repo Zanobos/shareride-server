@@ -90,6 +90,7 @@ public class BookingService extends BaseService {
 		//Load from the DB the previous request
 		UserRequestEntity request = persistenceController.loadRequest(confirmRequest.getRequestId());
 		request.setStatus(EnumStatus.CONFIRMED);
+		persistenceController.updateRequest(request);
 		
 		ConfirmRequestResponse confirmResponse = new ConfirmRequestResponse();
 		confirmResponse.setRequestId(request.getId());

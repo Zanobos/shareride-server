@@ -17,6 +17,7 @@ import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.utils.Constants;
+import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
 public class PersistenceController {
@@ -82,17 +83,19 @@ public class PersistenceController {
 	}
 	
 	/**
-	 * Loading from the db the previous requests
+	 * Loading from the db the previous requests of the same date, and CONFIRMED
 	 * @return
 	 */
 	public List<UserRequestEntity> loadPreviousRequests(LocalDate date) {
 
-		String hql = "FROM UserRequestEntity";
+		String hql = "FROM UserRequestEntity R WHERE R.localDate = :local_date and R.status = :status";
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
 		Query query = session.createQuery(hql);
+		query.setParameter("local_date", date);
+		query.setParameter("status", EnumStatus.CONFIRMED);
 		
 		@SuppressWarnings("unchecked")
 		List<UserRequestEntity> list = query.list();
@@ -119,6 +122,11 @@ public class PersistenceController {
 
 	}
 	
+	/**
+	 * Retrieving the request
+	 * @param requestId
+	 * @return
+	 */
 	public UserRequestEntity loadRequest(String requestId) {
 		
 		String hql = "FROM UserRequestEntity R WHERE R.id = :id";
@@ -135,6 +143,23 @@ public class PersistenceController {
 		session.close();
 		
 		return userRequest;
+	}
+	
+	/**
+	 * Updating the request
+	 * (the request must come from loadRequest)
+	 * @param request
+	 */
+	public void updateRequest(UserRequestEntity request) {
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		session.update(request);
+		
+		session.getTransaction().commit();
+		session.close();
+		
 	}
 
 	/**
