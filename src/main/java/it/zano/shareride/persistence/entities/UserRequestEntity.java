@@ -105,4 +105,13 @@ public class UserRequestEntity extends BaseEntity {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "UserRequestEntity [userName=" + userName + ", pickup=" + pickup + ", delivery=" + delivery
+				+ ", numberOfSeats=" + numberOfSeats + ", needAssistance=" + needAssistance + ", areaId=" + areaId
+				+ ", localDate=" + localDate + ", localTime=" + localTime + ", status=" + status + "]";
+	}
+	
+	
+
 }

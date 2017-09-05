@@ -8,12 +8,10 @@ import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.geocoding.io.ConvertLatLonRequest;
 import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
-import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
-import it.zano.shareride.rest.service.booking.io.CheckPathResponse;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.EnumStatus;
 
@@ -103,16 +101,6 @@ public class BookingServiceUtils {
 			location.setLocationName(convertLatLngResponse.getName());
 		}
 		
-	}
-
-	public static CheckPathResponse convertCheckPathResponse(RouteDoabilityResponse doabilityResponse) {
-		
-		CheckPathResponse response = new CheckPathResponse();
-		
-		response.setStatus(doabilityResponse.getStatus());
-		response.setRequestId(doabilityResponse.getRequestId());
-		
-		return response;
 	}
 
 }

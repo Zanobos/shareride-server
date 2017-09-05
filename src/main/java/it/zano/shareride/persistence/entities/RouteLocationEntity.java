@@ -1,21 +1,25 @@
 package it.zano.shareride.persistence.entities;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalTime;
 
+import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.utils.EnumRouteLocationType;
 
+@Entity
+@Table(name = PersistenceController.ROUTE_LOCATIONS)
 public class RouteLocationEntity extends BaseEntity {
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	private LocationEntity locationEntity;
-	private String locationEntityId; // because in the output of the route
-										// optimization, we only have the id
+	private String locationEntityId; // because in the output of the route optimization, we only have the id
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
 	private LocalTime arrivalTime;
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
@@ -24,7 +28,9 @@ public class RouteLocationEntity extends BaseEntity {
 	private Integer loadAfter;
 	@Enumerated(EnumType.STRING)
 	private EnumRouteLocationType routeLocationType;
-
+	@ManyToOne(cascade = CascadeType.ALL)
+	private RouteEntity route;
+	
 	public LocationEntity getLocationEntity() {
 		return locationEntity;
 	}
@@ -81,13 +87,19 @@ public class RouteLocationEntity extends BaseEntity {
 		this.routeLocationType = routeLocationType;
 	}
 
+	public RouteEntity getRoute() {
+		return route;
+	}
+
+	public void setRoute(RouteEntity route) {
+		this.route = route;
+	}
+
 	@Override
 	public String toString() {
 		return "RouteLocationEntity [locationEntity=" + locationEntity + ", locationEntityId=" + locationEntityId
 				+ ", arrivalTime=" + arrivalTime + ", endTime=" + endTime + ", loadBefore=" + loadBefore
-				+ ", loadAfter=" + loadAfter + ", routeLocationType=" + routeLocationType + "]";
+				+ ", loadAfter=" + loadAfter + ", routeLocationType=" + routeLocationType + ", route=" + route.getId() + "]";
 	}
-	
-	
 
 }

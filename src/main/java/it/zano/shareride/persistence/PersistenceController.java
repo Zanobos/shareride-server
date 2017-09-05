@@ -13,10 +13,13 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.joda.time.LocalDate;
 
 import it.zano.shareride.persistence.entities.LocationEntity;
+import it.zano.shareride.persistence.entities.RouteEntity;
+import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.utils.Constants;
+import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -27,6 +30,7 @@ public class PersistenceController {
 	public static final String VEHICLES = "VEHICLES";
 	public static final String VEHICLE_TYPES = "VEHICLE_TYPES";
 	public static final String ROUTES = "ROUTES";
+	public static final String ROUTE_LOCATIONS = "ROUTE_LOCATIONS";
 	
 	private static PersistenceController instance;
 	private static final Logger log = Logger.getLogger(PersistenceController.class.getName());
@@ -202,6 +206,90 @@ public class PersistenceController {
 		session.getTransaction().commit();
 		session.close();
 
+	}
+	
+	/**
+	 * Saving a new route
+	 * @param routeEntity
+	 */
+	public void saveRoute(RouteEntity routeEntity) {
+		
+		if(routeEntity == null)
+			return;
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		session.save(routeEntity);
+		
+		//Assigning the objects
+		for(RouteLocationEntity routeLocation: routeEntity.getRouteLocations()) {
+			
+			String locationEntityId = routeLocation.getLocationEntityId();
+			//TODO
+		}
+		
+		session.getTransaction().commit();
+		session.close();
+	}
+	
+	/**
+	 * Retrieving the route
+	 * @param routeId
+	 * @return
+	 */
+	public RouteEntity loadRoute(String routeId) {
+		
+		String hql = "FROM RouteEntity R WHERE R.id = :id";
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("id", routeId);
+		
+		RouteEntity userRequest = (RouteEntity) query.uniqueResult();
+		
+		session.getTransaction().commit();
+		session.close();
+		
+		return userRequest;
+	}
+	
+	/**
+	 * Updating the route
+	 * Se un altro utente ha fatto richieste, potrebbe aver creato una nuova rotta. Quindi, entro dentro tutte le LocationEntity
+	 * di questa rotta. Ad ogni LocationEntity associo questa rotta come quella in corso. Se era già presente una rotta, quella rotta
+	 * diventa outdated 
+	 * @param route
+	 */
+	public void updateRoute(RouteEntity route) {
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		
+		if(route.getRouteStatus().equals(EnumRouteStatus.PLANNED)) {
+			
+			for(RouteLocationEntity routeLocationEntity : route.getRouteLocations()) {
+				
+				LocationEntity locationEntity = routeLocationEntity.getLocationEntity();
+				//TODO atm, locationEntity is always null
+				RouteEntity oldroute = locationEntity.getRoute();
+				if(oldroute != null && !oldroute.getId().equals(route.getId())) {
+					oldroute.setRouteStatus(EnumRouteStatus.OUTDATED);
+					session.update(oldroute);
+				}
+				
+				locationEntity.setRoute(route);
+				session.update(locationEntity);
+			}
+		}
+		
+		session.update(route);
+		
+		session.getTransaction().commit();
+		session.close();
+		
 	}
 	
 	/**

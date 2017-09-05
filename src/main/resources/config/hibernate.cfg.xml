@@ -39,6 +39,8 @@
 		<mapping class="it.zano.shareride.persistence.entities.VehicleEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.VehicleTypeEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.UserRequestEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.RouteLocationEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.RouteEntity"/>
 		
     </session-factory>
 

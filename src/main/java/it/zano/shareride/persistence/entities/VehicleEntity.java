@@ -41,4 +41,11 @@ public class VehicleEntity extends BaseEntity {
 		this.type = type;
 	}
 
+	@Override
+	public String toString() {
+		return "VehicleEntity [vehicleId=" + vehicleId + ", startAddress=" + startAddress + ", type=" + type + "]";
+	}
+	
+	
+
 }

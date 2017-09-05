@@ -16,6 +16,7 @@ import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.PersistenceController;
+import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.rest.service.base.BaseService;
@@ -25,6 +26,7 @@ import it.zano.shareride.rest.service.booking.io.ConfirmRequestRequest;
 import it.zano.shareride.rest.service.booking.io.ConfirmRequestResponse;
 import it.zano.shareride.rest.service.booking.utils.BookingServiceUtils;
 import it.zano.shareride.rest.service.exception.ApplicationException;
+import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 
 @Path("/bookingService")
@@ -62,17 +64,29 @@ public class BookingService extends BaseService {
 		
 		//Saving the request in persistence (in order to generate an id to all the entities)
 		persistenceController.saveRequest(newRequest);
+		String requestId = newRequest.getId();
 		
 		//Assigning the response to the request
 		RouteDoabilityResponse doabilityResponse = routeOptimizationController.assessDoability(doabilityRequest);
-		doabilityResponse.setRequestId(newRequest.getId());
+		EnumStatus status = doabilityResponse.getStatus();
 		
 		//Updating the status
-		newRequest.setStatus(doabilityResponse.getStatus());
+		newRequest.setStatus(status);
 		persistenceController.updateRequest(newRequest);
 		
+		//Recupero le rotte create dal servizio
+		List<RouteEntity> routes = doabilityResponse.getRoutes();
+		RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
+		
+		//Salvo la rotta
+		persistenceController.saveRoute(routeEntity); //salvo la rotta anche se incomplete - taggata UNFEASIBLE
+		String routeId = routeEntity.getId(); //It can be null
+		
 		//Preparing the response
-		CheckPathResponse checkPathResponse = BookingServiceUtils.convertCheckPathResponse(doabilityResponse);
+		CheckPathResponse checkPathResponse = new CheckPathResponse();
+		checkPathResponse.setStatus(status);
+		checkPathResponse.setRequestId(requestId);
+		checkPathResponse.setRouteId(routeId);
 		
 		log.log(Level.INFO, "RESPONSE:<<" + checkPathResponse.toString() + ">>");
 		
@@ -94,6 +108,11 @@ public class BookingService extends BaseService {
 		UserRequestEntity request = persistenceController.loadRequest(confirmRequest.getRequestId());
 		request.setStatus(EnumStatus.CONFIRMED);
 		persistenceController.updateRequest(request);
+		
+		//Load from the DB the route
+		RouteEntity route = persistenceController.loadRoute(confirmRequest.getRouteId());
+		route.setRouteStatus(EnumRouteStatus.PLANNED);
+		persistenceController.updateRoute(route);
 		
 		ConfirmRequestResponse confirmResponse = new ConfirmRequestResponse();
 		confirmResponse.setRequestId(request.getId());

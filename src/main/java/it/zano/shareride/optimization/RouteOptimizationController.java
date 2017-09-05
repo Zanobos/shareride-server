@@ -43,6 +43,7 @@ import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.EnumRouteLocationType;
+import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -65,7 +66,7 @@ public class RouteOptimizationController {
 		JobId jobId;
 		RouteDoabilityResponse routeDoabilityResponse = null;
 		try {
-			log.log(Level.INFO, "OUTBOUND:<<" + body + ">>");
+			log.log(Level.FINE, "OUTBOUND:<<" + body + ">>");
 			jobId = vrpApi.postVrp(key, body);
 
 			SolutionApi solApi = new SolutionApi();
@@ -79,7 +80,7 @@ public class RouteOptimizationController {
 				Thread.sleep(waitTime);
 			}
 			
-			log.log(Level.INFO, "INBOUND:<<" + response + ">>");
+			log.log(Level.FINE, "INBOUND:<<" + response + ">>");
 			
 			routeDoabilityResponse = convertResponse(response);
 			
@@ -98,15 +99,18 @@ public class RouteOptimizationController {
 		RouteDoabilityResponse doabilityResponse = new RouteDoabilityResponse();
 		
 		EnumStatus status = EnumStatus.REJECTED;
+		EnumRouteStatus routeStatus = EnumRouteStatus.UNFEASIBLE;
 		SolutionUnassigned unassigned = response.getSolution().getUnassigned();
 		if(unassigned.getShipments().isEmpty()){
 			status = EnumStatus.ACCEPTED;
+			routeStatus = EnumRouteStatus.PROPOSED;
 		}
 		
 		List<RouteEntity> routes = new ArrayList<RouteEntity>();
 		
 		for(Route route : response.getSolution().getRoutes()){
 			RouteEntity routeEntity = new RouteEntity();
+			routeEntity.setRouteStatus(routeStatus);
 			routeEntity.setVehicleId(route.getVehicleId());
 			routeEntity.setCompletionTime(route.getCompletionTime());
 			routeEntity.setDistance(route.getDistance());
@@ -119,6 +123,7 @@ public class RouteOptimizationController {
 				routeLocation.setLoadBefore((activity.getLoadBefore() != null && !activity.getLoadBefore().isEmpty()) ? activity.getLoadBefore().get(0) : null);
 				routeLocation.setLoadAfter((activity.getLoadAfter() != null && !activity.getLoadAfter().isEmpty()) ? activity.getLoadAfter().get(0) : null);
 				routeLocation.setRouteLocationType(convertActivityType(activity.getType()));
+				routeLocation.setRoute(routeEntity);
 				routeLocations.add(routeLocation);
 			}
 			routeEntity.setRouteLocations(routeLocations);
