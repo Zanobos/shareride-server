@@ -191,6 +191,30 @@ public class PersistenceController {
         
 		return list;
 	}
+
+	/**
+	 * Load the vehicle identified by its id
+	 * @param vehicleId
+	 * @return
+	 */
+	public VehicleEntity loadVehicle(String vehicleId) {
+
+		String hql = "FROM VehicleEntity R WHERE R.id = :id";
+
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery(hql);
+		query.setParameter("id", vehicleId);
+
+		VehicleEntity userRequest = (VehicleEntity) query.uniqueResult();
+
+		session.getTransaction().commit();
+		session.close();
+
+		return userRequest;
+
+	}
 	
 	/**
 	 * Saving a new vehicle
@@ -220,14 +244,22 @@ public class PersistenceController {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
-		session.save(routeEntity);
+		//Assigning the vehicle
+		String vehicleId = routeEntity.getVehicleId();
+		VehicleEntity vehicle = loadVehicle(vehicleId);
+		routeEntity.setVehicle(vehicle);
 		
 		//Assigning the objects
 		for(RouteLocationEntity routeLocation: routeEntity.getRouteLocations()) {
 			
 			String locationEntityId = routeLocation.getLocationEntityId();
-			//TODO
+			
+			LocationEntity location = loadLocation(locationEntityId);
+			
+			routeLocation.setLocationEntity(location);
 		}
+		
+		session.save(routeEntity);
 		
 		session.getTransaction().commit();
 		session.close();
@@ -248,12 +280,12 @@ public class PersistenceController {
 		Query query = session.createQuery(hql);
 		query.setParameter("id", routeId);
 		
-		RouteEntity userRequest = (RouteEntity) query.uniqueResult();
+		RouteEntity route = (RouteEntity) query.uniqueResult();
 		
 		session.getTransaction().commit();
 		session.close();
 		
-		return userRequest;
+		return route;
 	}
 	
 	/**
@@ -273,7 +305,6 @@ public class PersistenceController {
 			for(RouteLocationEntity routeLocationEntity : route.getRouteLocations()) {
 				
 				LocationEntity locationEntity = routeLocationEntity.getLocationEntity();
-				//TODO atm, locationEntity is always null
 				RouteEntity oldroute = locationEntity.getRoute();
 				if(oldroute != null && !oldroute.getId().equals(route.getId())) {
 					oldroute.setRouteStatus(EnumRouteStatus.OUTDATED);
@@ -290,6 +321,28 @@ public class PersistenceController {
 		session.getTransaction().commit();
 		session.close();
 		
+	}
+	
+	/**
+	 * Load the location identified by its id
+	 * @param locationId
+	 * @return
+	 */
+	public LocationEntity loadLocation(String locationId) {
+		String hql = "FROM LocationEntity R WHERE R.id = :id";
+
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery(hql);
+		query.setParameter("id", locationId);
+
+		LocationEntity userRequest = (LocationEntity) query.uniqueResult();
+
+		session.getTransaction().commit();
+		session.close();
+
+		return userRequest;
 	}
 	
 	/**

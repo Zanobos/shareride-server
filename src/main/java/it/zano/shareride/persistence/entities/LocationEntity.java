@@ -2,7 +2,7 @@ package it.zano.shareride.persistence.entities;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -23,7 +23,7 @@ public class LocationEntity extends BaseEntity {
 	private LocalDate date;
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
 	private LocalTime time;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@OneToOne(optional = true)
 	private RouteEntity route; 	//La rotta che al momento soddisfera questa location di un cliente.
 								//Se presente, puo essere solo in status planned
 
@@ -86,7 +86,7 @@ public class LocationEntity extends BaseEntity {
 	@Override
 	public String toString() {
 		return "LocationEntity [locationName=" + locationName + ", address=" + address + ", lat=" + lat + ", lon=" + lon
-				+ ", date=" + date + ", time=" + time + ", route=" + route + "]";
+				+ ", date=" + date + ", time=" + time + "]";
 	}
 
 }

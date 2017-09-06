@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -17,7 +18,7 @@ import it.zano.shareride.utils.EnumRouteLocationType;
 @Table(name = PersistenceController.ROUTE_LOCATIONS)
 public class RouteLocationEntity extends BaseEntity {
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private LocationEntity locationEntity;
 	private String locationEntityId; // because in the output of the route optimization, we only have the id
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
