@@ -18,6 +18,7 @@ import it.zano.shareride.utils.EnumStatus;
 @Table(name = PersistenceController.USER_REQUESTS)
 public class UserRequestEntity extends BaseEntity {
 
+	private String userId;
 	private String userName;
 	@OneToOne(cascade = CascadeType.ALL)
 	private LocationEntity pickup;
@@ -104,12 +105,20 @@ public class UserRequestEntity extends BaseEntity {
 	public void setStatus(EnumStatus status) {
 		this.status = status;
 	}
+	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 	@Override
 	public String toString() {
-		return "UserRequestEntity [userName=" + userName + ", pickup=" + pickup + ", delivery=" + delivery
-				+ ", numberOfSeats=" + numberOfSeats + ", needAssistance=" + needAssistance + ", areaId=" + areaId
-				+ ", localDate=" + localDate + ", localTime=" + localTime + ", status=" + status + "]";
+		return "UserRequestEntity [userId=" + userId + ", userName=" + userName + ", pickup=" + pickup + ", delivery="
+				+ delivery + ", numberOfSeats=" + numberOfSeats + ", needAssistance=" + needAssistance + ", areaId="
+				+ areaId + ", localDate=" + localDate + ", localTime=" + localTime + ", status=" + status + "]";
 	}
 	
 	

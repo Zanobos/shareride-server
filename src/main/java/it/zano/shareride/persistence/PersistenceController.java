@@ -69,15 +69,23 @@ public class PersistenceController {
 	 * Loading from the db the previous requests
 	 * @return
 	 */
-	public List<UserRequestEntity> loadPreviousRequests(LocalDate date, String areaId) {
+	public List<UserRequestEntity> loadPreviousRequests(String userId, LocalDate localDate) {
 
-		String hql = "FROM UserRequestEntity R WHERE R.areaId = :area_id";
+		String hql = "FROM UserRequestEntity R WHERE R.userId = :userId AND R.status = :status";
+		
+		if(localDate!= null) {
+			hql = hql + " AND R.localDate = :localDate";
+		}
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
 		Query query = session.createQuery(hql);
-		query.setParameter("area_id", areaId);
+		query.setParameter("userId", userId);
+		query.setParameter("status", EnumStatus.CONFIRMED);
+		if(localDate!=null) {
+			query.setParameter("localDate", localDate);
+		}
 		
 		@SuppressWarnings("unchecked")
 		List<UserRequestEntity> list = query.list();
@@ -94,7 +102,7 @@ public class PersistenceController {
 	 */
 	public List<UserRequestEntity> loadPreviousRequests(LocalDate date) {
 
-		String hql = "FROM UserRequestEntity R WHERE R.localDate = :local_date and R.status = :status";
+		String hql = "FROM UserRequestEntity R WHERE R.localDate = :local_date AND R.status = :status";
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -111,6 +119,8 @@ public class PersistenceController {
         
 		return list;
 	}
+	
+	
 
 	/**
 	 * Saving a new request

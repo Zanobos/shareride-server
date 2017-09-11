@@ -4,8 +4,12 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.joda.deser.LocalTimeDeserializer;
+
+import it.zano.shareride.utils.LocalDateTypeSerializer;
+import it.zano.shareride.utils.LocalTimeTypeSerializer;
 
 public class Location {
 
@@ -14,8 +18,10 @@ public class Location {
 	private Double lat;
 	private Double lon;
 	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonSerialize(using = LocalDateTypeSerializer.class)
 	private LocalDate date;
 	@JsonDeserialize(using = LocalTimeDeserializer.class)
+	@JsonSerialize(using = LocalTimeTypeSerializer.class)
 	private LocalTime time;
 
 	public String getLocationName() {

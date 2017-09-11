@@ -1,6 +1,7 @@
 package it.zano.shareride.rest.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,10 +21,13 @@ import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.rest.service.base.BaseService;
+import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathResponse;
 import it.zano.shareride.rest.service.booking.io.ConfirmRequestRequest;
 import it.zano.shareride.rest.service.booking.io.ConfirmRequestResponse;
+import it.zano.shareride.rest.service.booking.io.UserRequestListRequest;
+import it.zano.shareride.rest.service.booking.io.UserRequestListResponse;
 import it.zano.shareride.rest.service.booking.utils.BookingServiceUtils;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.EnumRouteStatus;
@@ -123,6 +127,30 @@ public class BookingService extends BaseService {
 		return confirmResponse;
 	}
 
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/userRequestList")
+	public UserRequestListResponse userRequestList(UserRequestListRequest userRequestListRequest) throws ApplicationException, Exception {
+		
+		log.log(Level.INFO, "REQUEST:<<" + userRequestListRequest.toString() + ">>");
+		
+		//Preparing the controllers
+		PersistenceController persistenceController = PersistenceController.getInstance();
+		String userId = userRequestListRequest.getUserId();
+		LocalDate date = userRequestListRequest.getDate();
+		
+		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(userId, date);
+		Map<String, UserRequest> requestMap = BookingServiceUtils.convertRequestList(previousRequests);
+		
+		UserRequestListResponse response = new UserRequestListResponse();
+		response.setRequestMap(requestMap);
+		
+		log.log(Level.INFO, "RESPONSE:<<" + response.toString() + ">>");
+		
+		return response;
+		
+	}
 
 
 }

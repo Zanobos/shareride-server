@@ -1,5 +1,9 @@
 package it.zano.shareride.rest.service.booking.utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -11,6 +15,7 @@ import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.service.booking.entities.Location;
+import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.EnumStatus;
@@ -54,6 +59,7 @@ public class BookingServiceUtils {
 		userRequest.setNeedAssistance(request.getAdditionalInfo().getNeedAssistance());
 		userRequest.setNumberOfSeats(request.getAdditionalInfo().getNumberOfSeats());
 		userRequest.setUserName(request.getUserInfo().getName());
+		userRequest.setUserId(request.getUserInfo().getUserId());
 		userRequest.setDelivery(convertLocation(request.getDelivery()));
 		userRequest.setPickup(convertLocation(request.getPickup()));
 		userRequest.setStatus(EnumStatus.TOBEDONE);
@@ -74,6 +80,20 @@ public class BookingServiceUtils {
 		return locationEntity;
 	}
 
+	private static Location convertLocationEntity(LocationEntity locationEntity) {
+		Location location = new Location();
+		
+		location.setAddress(locationEntity.getAddress());
+		location.setDate(locationEntity.getDate());
+		location.setLat(locationEntity.getLat());
+		location.setLocationName(locationEntity.getLocationName());
+		location.setLon(locationEntity.getLon());
+		location.setTime(locationEntity.getTime());
+		
+		return location;
+		
+	}
+	
 	private static void enrichLocation(Location location) throws ApplicationException {
 		
 		GeocodingController geocodingController = new GeocodingController();
@@ -101,6 +121,33 @@ public class BookingServiceUtils {
 			location.setLocationName(convertLatLngResponse.getName());
 		}
 		
+	}
+
+	public static Map<String, UserRequest> convertRequestList(List<UserRequestEntity> previousRequests) {
+		
+		Map<String,UserRequest> requestMap = new HashMap<String,UserRequest>();
+		
+		for(UserRequestEntity requestEntity : previousRequests){
+			UserRequest userRequest = new UserRequest();
+			
+			userRequest.setRequestId(requestEntity.getId());
+			
+			LocationEntity delivery = requestEntity.getDelivery();
+			Location askedDevilery = convertLocationEntity(delivery);
+			userRequest.setAskedDevilery(askedDevilery);
+			
+			LocationEntity pickup = requestEntity.getPickup();
+			Location askedPickup =  convertLocationEntity(pickup);
+			userRequest.setAskedPickup(askedPickup);
+			
+			//TODO
+			//userRequest.setProposedDevilery(proposedDevilery);
+			//userRequest.setProposedPickup(proposedPickup);
+			
+			requestMap.put(userRequest.getRequestId(), userRequest);
+		}
+		
+		return requestMap;
 	}
 
 }
