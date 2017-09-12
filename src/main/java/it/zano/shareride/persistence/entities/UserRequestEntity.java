@@ -1,9 +1,16 @@
 package it.zano.shareride.persistence.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,6 +40,20 @@ public class UserRequestEntity extends BaseEntity {
 	private LocalTime localTime;
 	@Enumerated(EnumType.STRING)
 	private EnumStatus status;
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
+	@JoinTable(name = PersistenceController.USER_REQUESTS_ROUTES,
+	    joinColumns = {
+	        @JoinColumn(
+	            name = "user_request_id"
+	        )
+	    },
+	    inverseJoinColumns = {
+	        @JoinColumn(
+	            name = "route_id"
+	        )
+	    }
+	)
+	private Set<RouteEntity> routes = new HashSet<>();
 
 	public String getUserName() {
 		return userName;
@@ -114,6 +135,14 @@ public class UserRequestEntity extends BaseEntity {
 		this.userId = userId;
 	}
 
+	public Set<RouteEntity> getRoutes() {
+		return routes;
+	}
+
+	public void setRoutes(Set<RouteEntity> routes) {
+		this.routes = routes;
+	}
+
 	@Override
 	public String toString() {
 		return "UserRequestEntity [userId=" + userId + ", userName=" + userName + ", pickup=" + pickup + ", delivery="
@@ -121,6 +150,4 @@ public class UserRequestEntity extends BaseEntity {
 				+ areaId + ", localDate=" + localDate + ", localTime=" + localTime + ", status=" + status + "]";
 	}
 	
-	
-
 }

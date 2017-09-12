@@ -13,11 +13,14 @@ import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.geocoding.io.ConvertLatLonRequest;
 import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
 import it.zano.shareride.persistence.entities.LocationEntity;
+import it.zano.shareride.persistence.entities.RouteEntity;
+import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
 import it.zano.shareride.rest.service.exception.ApplicationException;
+import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 
 public class BookingServiceUtils {
@@ -140,14 +143,46 @@ public class BookingServiceUtils {
 			Location askedPickup =  convertLocationEntity(pickup);
 			userRequest.setAskedPickup(askedPickup);
 			
-			//TODO
-			//userRequest.setProposedDevilery(proposedDevilery);
-			//userRequest.setProposedPickup(proposedPickup);
+			RouteLocationEntity proposedDevileryEntity = null;
+			RouteLocationEntity proposedPickupEntity = null;
+			for(RouteEntity route : requestEntity.getRoutes()){
+				if(route.getRouteStatus().equals(EnumRouteStatus.PLANNED)) {
+					//Getting the right locations
+					for(RouteLocationEntity routeLocation : route.getRouteLocations()){
+						if(routeLocation.getLocationEntity().getId().equals(delivery.getId())){
+							proposedDevileryEntity = routeLocation;
+						} else if(routeLocation.getLocationEntity().getId().equals(pickup.getId())){
+							proposedPickupEntity = routeLocation;
+						}
+					}
+				}
+			}
+			
+			Location proposedDevilery = convertRouteLocationEntity(proposedDevileryEntity);
+			Location proposedPickup = convertRouteLocationEntity(proposedPickupEntity);
+			userRequest.setProposedDevilery(proposedDevilery);
+			userRequest.setProposedPickup(proposedPickup);
 			
 			requestMap.put(userRequest.getRequestId(), userRequest);
 		}
 		
 		return requestMap;
+	}
+
+	private static Location convertRouteLocationEntity(RouteLocationEntity routeLocationEntity) {
+		
+		Location location = new Location();
+		
+		LocationEntity locationEntity = routeLocationEntity.getLocationEntity();
+		
+		location.setAddress(locationEntity.getAddress());
+		location.setDate(locationEntity.getDate());
+		location.setLat(locationEntity.getLat());
+		location.setLocationName(locationEntity.getLocationName());
+		location.setLon(locationEntity.getLon());
+		location.setTime(routeLocationEntity.getArrivalTime());
+		
+		return location;
 	}
 
 }

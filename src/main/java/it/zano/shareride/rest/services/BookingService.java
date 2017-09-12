@@ -78,13 +78,24 @@ public class BookingService extends BaseService {
 		newRequest.setStatus(status);
 		persistenceController.updateRequest(newRequest);
 		
-		//Recupero le rotte create dal servizio
-		List<RouteEntity> routes = doabilityResponse.getRoutes();
-		RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
-		
-		//Salvo la rotta
-		persistenceController.saveRoute(routeEntity); //salvo la rotta anche se incomplete - taggata UNFEASIBLE
-		String routeId = routeEntity.getId(); //It can be null
+		String routeId = null;
+		if(status.equals(EnumStatus.ACCEPTED)){
+			
+			//Recupero le rotte create dal servizio
+			List<RouteEntity> routes = doabilityResponse.getRoutes();
+			
+			//Prendo la prima rotta, e la vado ad assegnare a tutte le request
+			RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
+			persistenceController.saveRoute(routeEntity); //salvo la rotta
+			
+			//E alla rotta assegno tutte queste request
+			for(UserRequestEntity userRequest : previousRequests){
+				routeEntity.addUserRequest(userRequest);
+				persistenceController.updateRequest(userRequest);
+			}
+			
+			routeId = routeEntity.getId(); //It can be null
+		}
 		
 		//Preparing the response
 		CheckPathResponse checkPathResponse = new CheckPathResponse();
@@ -117,6 +128,18 @@ public class BookingService extends BaseService {
 		RouteEntity route = persistenceController.loadRoute(confirmRequest.getRouteId());
 		route.setRouteStatus(EnumRouteStatus.PLANNED);
 		persistenceController.updateRoute(route);
+		
+		//Outdating the old routes
+		for(UserRequestEntity requestEntity : route.getUserRequests()) {
+			for(RouteEntity routeEntity : requestEntity.getRoutes()) {
+				if(!routeEntity.getId().equals(route.getId())
+						&& routeEntity.getRouteStatus().equals(EnumRouteStatus.PLANNED)) {
+					
+					routeEntity.setRouteStatus(EnumRouteStatus.OUTDATED);
+					persistenceController.updateRoute(routeEntity);
+				}
+			}
+		}
 		
 		ConfirmRequestResponse confirmResponse = new ConfirmRequestResponse();
 		confirmResponse.setRequestId(request.getId());

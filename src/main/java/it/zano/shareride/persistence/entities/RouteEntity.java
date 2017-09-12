@@ -1,16 +1,20 @@
 package it.zano.shareride.persistence.entities;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import it.zano.shareride.persistence.PersistenceController;
 import it.zano.shareride.utils.EnumRouteStatus;
@@ -21,8 +25,11 @@ public class RouteEntity extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
 	private List<RouteLocationEntity> routeLocations;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "routes",fetch = FetchType.EAGER)
+	private Set<UserRequestEntity> userRequests = new HashSet<>();
+	@ManyToOne
 	private VehicleEntity vehicle;
+	@Transient
 	private String vehicleId; // because in the output of the route optimization, we only have the id
 	private Long distance;
 	private Long completionTime;
@@ -75,6 +82,19 @@ public class RouteEntity extends BaseEntity {
 
 	public void setRouteStatus(EnumRouteStatus routeStatus) {
 		this.routeStatus = routeStatus;
+	}
+	
+	public Set<UserRequestEntity> getUserRequests() {
+		return userRequests;
+	}
+	
+	public void addUserRequest(UserRequestEntity userRequest) {
+		getUserRequests().add(userRequest);
+		userRequest.getRoutes().add(this);
+	}
+
+	public void setUserRequests(Set<UserRequestEntity> userRequests) {
+		this.userRequests = userRequests;
 	}
 
 	@Override

@@ -114,7 +114,7 @@ public class RouteOptimizationController {
 			routeEntity.setVehicleId(route.getVehicleId());
 			routeEntity.setCompletionTime(route.getCompletionTime());
 			routeEntity.setDistance(route.getDistance());
-			List<RouteLocationEntity> routeLocations = new ArrayList<RouteLocationEntity>();
+			routeEntity.setRouteLocations(new ArrayList<RouteLocationEntity>());
 			for(Activity activity : route.getActivities()) {
 				RouteLocationEntity routeLocation = new RouteLocationEntity();
 				routeLocation.setArrivalTime(convertTime(activity.getArrTime()));
@@ -124,9 +124,8 @@ public class RouteOptimizationController {
 				routeLocation.setLoadAfter((activity.getLoadAfter() != null && !activity.getLoadAfter().isEmpty()) ? activity.getLoadAfter().get(0) : null);
 				routeLocation.setRouteLocationType(convertActivityType(activity.getType()));
 				routeLocation.setRoute(routeEntity);
-				routeLocations.add(routeLocation);
+				routeEntity.getRouteLocations().add(routeLocation);
 			}
-			routeEntity.setRouteLocations(routeLocations);
 			
 			routes.add(routeEntity);
 		}

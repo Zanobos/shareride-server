@@ -19,7 +19,6 @@ import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
 import it.zano.shareride.persistence.entities.VehicleTypeEntity;
 import it.zano.shareride.utils.Constants;
-import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -31,6 +30,7 @@ public class PersistenceController {
 	public static final String VEHICLE_TYPES = "VEHICLE_TYPES";
 	public static final String ROUTES = "ROUTES";
 	public static final String ROUTE_LOCATIONS = "ROUTE_LOCATIONS";
+	public static final String USER_REQUESTS_ROUTES = "USER_REQUESTS_ROUTES";
 	
 	private static PersistenceController instance;
 	private static final Logger log = Logger.getLogger(PersistenceController.class.getName());
@@ -300,31 +300,12 @@ public class PersistenceController {
 	
 	/**
 	 * Updating the route
-	 * Se un altro utente ha fatto richieste, potrebbe aver creato una nuova rotta. Quindi, entro dentro tutte le LocationEntity
-	 * di questa rotta. Ad ogni LocationEntity associo questa rotta come quella in corso. Se era già presente una rotta, quella rotta
-	 * diventa outdated 
 	 * @param route
 	 */
 	public void updateRoute(RouteEntity route) {
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		
-		if(route.getRouteStatus().equals(EnumRouteStatus.PLANNED)) {
-			
-			for(RouteLocationEntity routeLocationEntity : route.getRouteLocations()) {
-				
-				LocationEntity locationEntity = routeLocationEntity.getLocationEntity();
-				RouteEntity oldroute = locationEntity.getRoute();
-				if(oldroute != null && !oldroute.getId().equals(route.getId())) {
-					oldroute.setRouteStatus(EnumRouteStatus.OUTDATED);
-					session.update(oldroute);
-				}
-				
-				locationEntity.setRoute(route);
-				session.update(locationEntity);
-			}
-		}
 		
 		session.update(route);
 		

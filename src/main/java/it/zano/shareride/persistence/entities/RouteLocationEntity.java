@@ -1,12 +1,12 @@
 package it.zano.shareride.persistence.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalTime;
@@ -20,6 +20,7 @@ public class RouteLocationEntity extends BaseEntity {
 
 	@OneToOne
 	private LocationEntity locationEntity;
+	@Transient
 	private String locationEntityId; // because in the output of the route optimization, we only have the id
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
 	private LocalTime arrivalTime;
@@ -29,7 +30,7 @@ public class RouteLocationEntity extends BaseEntity {
 	private Integer loadAfter;
 	@Enumerated(EnumType.STRING)
 	private EnumRouteLocationType routeLocationType;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private RouteEntity route;
 	
 	public LocationEntity getLocationEntity() {
