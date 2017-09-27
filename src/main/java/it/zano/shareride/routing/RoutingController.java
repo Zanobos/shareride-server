@@ -1,14 +1,18 @@
 package it.zano.shareride.routing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.graphhopper.directions.api.client.ApiException;
 import com.graphhopper.directions.api.client.api.RoutingApi;
+import com.graphhopper.directions.api.client.model.ResponseCoordinatesArray;
 import com.graphhopper.directions.api.client.model.RouteResponse;
+import com.graphhopper.directions.api.client.model.RouteResponsePath;
 
+import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.routing.io.RoutingRequest;
@@ -24,6 +28,8 @@ public class RoutingController {
 	public RoutingResponse calculateRoutePath(RoutingRequest routingRequest) throws ApplicationException {
 		
 		log.log(Level.INFO, "INPUT:<<" + routingRequest.toString() + ">>");
+		
+		RoutingResponse routingResponse = null;
 		
 		RoutingApi routingApi = new RoutingApi();
 		
@@ -56,12 +62,32 @@ public class RoutingController {
 			log.log(Level.FINE, "OUTBOUND:<<" + points + ">>");
 		    RouteResponse routeResponse = routingApi.routeGet(points, pointsEncoded, key, locale, instructions, vehicle, elevation, calcPoints, pointHint, chDisable, weighting, edgeTraversal, algorithm, heading, headingPenalty, passThrough, roundTripDistance, roundTripSeed, alternativeRouteMaxPaths, alternativeRouteMaxWeightFactor, alternativeRouteMaxShareFactor);
 		    log.log(Level.FINE, "INBOUND:<<" + routeResponse.toString() + ">>");
+		    
+		    routingResponse = new RoutingResponse();
+		    routingResponse.setPoints(new HashSet<GeoPointEntity>());
+		    
+		    //I get the first path
+		    RouteResponsePath routeResponsePath = routeResponse.getPaths().get(0);
+		    ResponseCoordinatesArray coordinates = routeResponsePath.getPoints().getCoordinates();
+		    
+		    for(List<?> coordinate : coordinates){
+		    	
+		    	GeoPointEntity point = new GeoPointEntity();
+		    	//From docs, they are inverted...
+		    	Double lon = (Double) coordinate.get(0);
+		    	Double lat = (Double) coordinate.get(1);
+		    	
+		    	point.setLatitude(lat);
+		    	point.setLongitude(lon);
+		    	
+		    	routingResponse.getPoints().add(point);
+		    }
+		    
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Routing failed: " + e.getMessage() + e.getResponseBody() != null ? e.getResponseBody() : "", e);
 			throw new ApplicationException(e, "Error during routing: " + points);
 		}
 		
-		RoutingResponse routingResponse = new RoutingResponse();
 		
 		log.log(Level.INFO, "OUTPUT:<<" + routingResponse.toString() + ">>");
 		

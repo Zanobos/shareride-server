@@ -13,6 +13,7 @@ import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.geocoding.io.ConvertLatLonRequest;
 import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
+import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.utils.PropertiesLoader;
 
@@ -42,8 +43,12 @@ public class GeocodingController {
 					"", PROVIDER);
 			GeocodingLocation location = geocodingResponse.getHits().get(0);
 			GeocodingPoint geocodingPoint = location.getPoint();
-			convertAddressResponse.setLat(geocodingPoint.getLat());
-			convertAddressResponse.setLon(geocodingPoint.getLng());
+			
+			GeoPointEntity geoPointEntity = new GeoPointEntity();
+			geoPointEntity.setLatitude(geocodingPoint.getLat());
+			geoPointEntity.setLongitude(geocodingPoint.getLng());
+			
+			convertAddressResponse.setPoint(geoPointEntity);
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Geocoding failed: " + e.getMessage(), e);
 			throw new ApplicationException(e, "Error during geocoding: " + convertAddressRequest.getAddress());

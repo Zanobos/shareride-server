@@ -2,6 +2,7 @@ package it.zano.shareride.rest.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.PersistenceController;
+import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
@@ -30,6 +32,9 @@ import it.zano.shareride.rest.service.booking.io.UserRequestListRequest;
 import it.zano.shareride.rest.service.booking.io.UserRequestListResponse;
 import it.zano.shareride.rest.service.booking.utils.BookingServiceUtils;
 import it.zano.shareride.rest.service.exception.ApplicationException;
+import it.zano.shareride.routing.RoutingController;
+import it.zano.shareride.routing.io.RoutingRequest;
+import it.zano.shareride.routing.io.RoutingResponse;
 import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 
@@ -86,7 +91,21 @@ public class BookingService extends BaseService {
 			
 			//Prendo la prima rotta
 			RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
-			persistenceController.saveRoute(routeEntity); //salvo la rotta
+			//salvo la rotta
+			persistenceController.saveRoute(routeEntity); 
+			
+			//Preparo il controller
+			RoutingController routingController = new RoutingController();
+			
+			//Calcolo l'effettivo path da fare
+			RoutingRequest routingRequest = new RoutingRequest();
+			routingRequest.setRouteLocations(routeEntity.getRouteLocations());
+			RoutingResponse routingResponse = routingController.calculateRoutePath(routingRequest);
+			
+			//Assegno il path alla rotta, e faccio l'update in sessione
+			Set<GeoPointEntity> path = routingResponse.getPoints();
+			routeEntity.setPath(path);
+			persistenceController.updateRoute(routeEntity);
 			
 			//E alla rotta assegno tutte le request
 			for(UserRequestEntity userRequest : previousRequests){

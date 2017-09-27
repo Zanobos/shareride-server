@@ -1,24 +1,22 @@
 package it.zano.shareride.geocoding.io;
 
+import it.zano.shareride.persistence.entities.GeoPointEntity;
+
 public class ConvertAddressResponse {
 
-	private Double lat;
-	private Double lon;
+	private GeoPointEntity point;
 
-	public Double getLat() {
-		return lat;
+	public GeoPointEntity getPoint() {
+		return point;
 	}
 
-	public void setLat(Double lat) {
-		this.lat = lat;
+	public void setPoint(GeoPointEntity point) {
+		this.point = point;
 	}
 
-	public Double getLon() {
-		return lon;
-	}
-
-	public void setLon(Double lon) {
-		this.lon = lon;
+	@Override
+	public String toString() {
+		return "ConvertAddressResponse [point=" + point + "]";
 	}
 
 }

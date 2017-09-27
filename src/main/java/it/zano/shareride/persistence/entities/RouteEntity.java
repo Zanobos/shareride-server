@@ -24,6 +24,8 @@ import it.zano.shareride.utils.EnumRouteStatus;
 public class RouteEntity extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
+	private Set<GeoPointEntity> path = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
 	private List<RouteLocationEntity> routeLocations;
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "routes",fetch = FetchType.EAGER)
 	private Set<UserRequestEntity> userRequests = new HashSet<>();
@@ -95,6 +97,18 @@ public class RouteEntity extends BaseEntity {
 
 	public void setUserRequests(Set<UserRequestEntity> userRequests) {
 		this.userRequests = userRequests;
+	}
+	
+	public Set<GeoPointEntity> getPath() {
+		return path;
+	}
+
+	public void setPath(Set<GeoPointEntity> path) {
+		for(GeoPointEntity point : path) {
+			point.setRoute(this);
+		}
+		this.path = path;
+		
 	}
 
 	@Override

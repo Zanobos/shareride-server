@@ -108,8 +108,8 @@ public class BookingServiceUtils {
 			
 			ConvertAddressResponse convertAddressResponse = geocodingController.convertAddress(convertAddressRequest);
 			
-			location.setLat(convertAddressResponse.getLat());
-			location.setLon(convertAddressResponse.getLon());
+			location.setLat(convertAddressResponse.getPoint().getLatitude());
+			location.setLon(convertAddressResponse.getPoint().getLongitude());
 			
 		}
 		
