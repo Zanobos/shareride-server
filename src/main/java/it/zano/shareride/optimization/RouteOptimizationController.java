@@ -2,6 +2,8 @@ package it.zano.shareride.optimization;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +128,38 @@ public class RouteOptimizationController {
 				routeLocation.setRoute(routeEntity);
 				routeEntity.getRouteLocations().add(routeLocation);
 			}
+			//I reorder the route locations based on the time
+			Collections.sort(routeEntity.getRouteLocations(), new Comparator<RouteLocationEntity>() {
+
+				@Override
+				public int compare(RouteLocationEntity location1, RouteLocationEntity location2) {
+					
+					EnumRouteLocationType type1 = location1.getRouteLocationType();
+					EnumRouteLocationType type2 = location2.getRouteLocationType();
+					
+					if(type1 == EnumRouteLocationType.START){
+						return -1;
+					}
+					if(type1 == EnumRouteLocationType.END) {
+						return 1;
+					}
+					if(type2 == EnumRouteLocationType.START) {
+						return 1;
+					}
+					if(type2 == EnumRouteLocationType.END) {
+						return -1;
+					}
+					
+					//If I arrive here, both start and end time are not null
+					LocalTime arrivalTime1 = location1.getArrivalTime();
+					LocalTime arrivalTime2 = location2.getArrivalTime();
+					
+					return arrivalTime1.compareTo(arrivalTime2);
+					
+				}
+				
+			});
+			
 			
 			routes.add(routeEntity);
 		}

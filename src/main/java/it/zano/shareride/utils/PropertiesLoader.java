@@ -37,5 +37,10 @@ public class PropertiesLoader {
 		String prop = getProperty(key);
 		return Integer.parseInt(prop);
 	}
+	
+	public static Boolean getPropertyBoolean(String key) {
+		String prop = getProperty(key);
+		return Boolean.valueOf(prop);
+	}
 
 }

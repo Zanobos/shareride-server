@@ -84,11 +84,11 @@ public class BookingService extends BaseService {
 			//Recupero le rotte create dal servizio
 			List<RouteEntity> routes = doabilityResponse.getRoutes();
 			
-			//Prendo la prima rotta, e la vado ad assegnare a tutte le request
+			//Prendo la prima rotta
 			RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
 			persistenceController.saveRoute(routeEntity); //salvo la rotta
 			
-			//E alla rotta assegno tutte queste request
+			//E alla rotta assegno tutte le request
 			for(UserRequestEntity userRequest : previousRequests){
 				routeEntity.addUserRequest(userRequest);
 				persistenceController.updateRequest(userRequest);
@@ -174,6 +174,8 @@ public class BookingService extends BaseService {
 		return response;
 		
 	}
+	
+	
 
 
 }
