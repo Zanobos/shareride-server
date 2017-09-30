@@ -1,7 +1,7 @@
 package it.zano.shareride.routing;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +64,7 @@ public class RoutingController {
 		    log.log(Level.FINE, "INBOUND:<<" + routeResponse.toString() + ">>");
 		    
 		    routingResponse = new RoutingResponse();
-		    routingResponse.setPoints(new HashSet<GeoPointEntity>());
+		    routingResponse.setPoints(new LinkedHashSet<GeoPointEntity>());
 		    
 		    //I get the first path
 		    RouteResponsePath routeResponsePath = routeResponse.getPaths().get(0);

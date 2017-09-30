@@ -1,7 +1,7 @@
 package it.zano.shareride.persistence.entities;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +24,11 @@ import it.zano.shareride.utils.EnumRouteStatus;
 public class RouteEntity extends BaseEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
-	private Set<GeoPointEntity> path = new HashSet<>();
+	private Set<GeoPointEntity> path = new LinkedHashSet<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
 	private List<RouteLocationEntity> routeLocations;
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "routes",fetch = FetchType.EAGER)
-	private Set<UserRequestEntity> userRequests = new HashSet<>();
+	private Set<UserRequestEntity> userRequests = new LinkedHashSet<>();
 	@ManyToOne
 	private VehicleEntity vehicle;
 	@Transient

@@ -1,5 +1,7 @@
 package it.zano.shareride.rest.service.booking.entities;
 
+import java.util.List;
+
 public class UserRequest {
 	
 	private String requestId;
@@ -7,7 +9,8 @@ public class UserRequest {
 	private Location proposedPickup;
 	private Location askedDevilery;
 	private Location proposedDevilery;
-	//TODO complete route and/or path between pickup and delivery
+	
+	private List<GeoPoint> path;
 	
 	public String getRequestId() {
 		return requestId;
@@ -38,6 +41,12 @@ public class UserRequest {
 	}
 	public void setProposedDevilery(Location proposedDevilery) {
 		this.proposedDevilery = proposedDevilery;
+	}
+	public List<GeoPoint> getPath() {
+		return path;
+	}
+	public void setPath(List<GeoPoint> path) {
+		this.path = path;
 	}
 	@Override
 	public String toString() {

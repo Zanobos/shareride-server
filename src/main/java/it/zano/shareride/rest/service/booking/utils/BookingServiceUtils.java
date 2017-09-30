@@ -1,5 +1,6 @@
 package it.zano.shareride.rest.service.booking.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.geocoding.io.ConvertLatLonRequest;
 import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
+import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.rest.service.booking.entities.GeoPoint;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
@@ -154,6 +157,14 @@ public class BookingServiceUtils {
 						} else if(routeLocation.getLocationEntity().getId().equals(pickup.getId())){
 							proposedPickupEntity = routeLocation;
 						}
+					}
+					userRequest.setPath(new ArrayList<GeoPoint>());
+					//Getting the path
+					for(GeoPointEntity geoPointEntity : route.getPath()){
+						GeoPoint point = new GeoPoint();
+						point.setLatitude(geoPointEntity.getLatitude());
+						point.setLongitude(geoPointEntity.getLongitude());
+						userRequest.getPath().add(point);
 					}
 				}
 			}
