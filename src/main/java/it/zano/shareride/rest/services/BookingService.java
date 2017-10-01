@@ -18,6 +18,7 @@ import it.zano.shareride.optimization.RouteOptimizationController;
 import it.zano.shareride.optimization.io.RouteDoabilityRequest;
 import it.zano.shareride.optimization.io.RouteDoabilityResponse;
 import it.zano.shareride.persistence.PersistenceController;
+import it.zano.shareride.persistence.entities.BoundingBoxEntity;
 import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
@@ -104,6 +105,8 @@ public class BookingService extends BaseService {
 			
 			//Assegno il path alla rotta, e faccio l'update in sessione
 			Set<GeoPointEntity> path = routingResponse.getPoints();
+			BoundingBoxEntity boundingBox = routingResponse.getBoundingBox();
+			routeEntity.setBoundingBox(boundingBox);
 			routeEntity.setPath(path);
 			persistenceController.updateRoute(routeEntity);
 			

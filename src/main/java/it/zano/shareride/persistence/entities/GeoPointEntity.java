@@ -10,10 +10,19 @@ import it.zano.shareride.persistence.PersistenceController;
 @Table(name = PersistenceController.GEO_POINTS)
 public class GeoPointEntity extends BaseEntity {
 
+	private Integer position;
 	private Double latitude;
 	private Double longitude;
 	@ManyToOne
 	private RouteEntity route;
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
 
 	public Double getLatitude() {
 		return latitude;
@@ -41,7 +50,7 @@ public class GeoPointEntity extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "GeoPointEntity [latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "GeoPointEntity [position=" + position + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 
 }

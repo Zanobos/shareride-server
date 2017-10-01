@@ -1,6 +1,8 @@
 package it.zano.shareride.rest.service.booking.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +15,13 @@ import it.zano.shareride.geocoding.io.ConvertAddressRequest;
 import it.zano.shareride.geocoding.io.ConvertAddressResponse;
 import it.zano.shareride.geocoding.io.ConvertLatLonRequest;
 import it.zano.shareride.geocoding.io.ConvertLatLonResponse;
+import it.zano.shareride.persistence.entities.BoundingBoxEntity;
 import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.rest.service.booking.entities.BoundingBox;
 import it.zano.shareride.rest.service.booking.entities.GeoPoint;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.entities.UserRequest;
@@ -161,11 +165,23 @@ public class BookingServiceUtils {
 					userRequest.setPath(new ArrayList<GeoPoint>());
 					//Getting the path
 					for(GeoPointEntity geoPointEntity : route.getPath()){
-						GeoPoint point = new GeoPoint();
-						point.setLatitude(geoPointEntity.getLatitude());
-						point.setLongitude(geoPointEntity.getLongitude());
+						GeoPoint point = convertGeoPointEntity(geoPointEntity);
 						userRequest.getPath().add(point);
 					}
+					// putting in the right position the points
+					Collections.sort(userRequest.getPath(), new Comparator<GeoPoint>() {
+						@Override
+						public int compare(GeoPoint point1, GeoPoint point2) {
+							return point1.getPosition().compareTo(point2.getPosition());
+						}
+					});
+					//Getting the bounding box
+					BoundingBoxEntity boundingBoxEntity = route.getBoundingBox();
+					BoundingBox boundingBox = new BoundingBox();
+					boundingBox.setMinimum(convertGeoPointEntity(boundingBoxEntity.getMinimum()));
+					boundingBox.setMaximum(convertGeoPointEntity(boundingBoxEntity.getMaximum()));
+					userRequest.setBoundingBox(boundingBox);
+					
 				}
 			}
 			
@@ -180,6 +196,16 @@ public class BookingServiceUtils {
 		return requestMap;
 	}
 
+	private static GeoPoint convertGeoPointEntity(GeoPointEntity geoPointEntity) {
+		GeoPoint geoPoint = new GeoPoint();
+		
+		geoPoint.setPosition(geoPointEntity.getPosition());
+		geoPoint.setLatitude(geoPointEntity.getLatitude());
+		geoPoint.setLongitude(geoPointEntity.getLongitude());
+		
+		return geoPoint;
+	}
+	
 	private static Location convertRouteLocationEntity(RouteLocationEntity routeLocationEntity) {
 		
 		Location location = new Location();

@@ -32,6 +32,7 @@ public class PersistenceController {
 	public static final String ROUTE_LOCATIONS = "ROUTE_LOCATIONS";
 	public static final String USER_REQUESTS_ROUTES = "USER_REQUESTS_ROUTES";
 	public static final String GEO_POINTS = "GEO_POINTS";
+	public static final String BOUNDING_BOXES = "BOUNDING_BOXES";
 	
 	private static PersistenceController instance;
 	private static final Logger log = Logger.getLogger(PersistenceController.class.getName());

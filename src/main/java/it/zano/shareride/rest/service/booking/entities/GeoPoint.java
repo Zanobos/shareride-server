@@ -1,8 +1,18 @@
 package it.zano.shareride.rest.service.booking.entities;
 
 public class GeoPoint {
+	
+	private Integer position;
 	private Double latitude;
 	private Double longitude;
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
 
 	public Double getLatitude() {
 		return latitude;
@@ -22,7 +32,7 @@ public class GeoPoint {
 
 	@Override
 	public String toString() {
-		return "GeoPoint [latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "GeoPoint [position=" + position + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 
 }

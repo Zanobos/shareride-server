@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,6 +24,8 @@ import it.zano.shareride.utils.EnumRouteStatus;
 @Table(name = PersistenceController.ROUTES)
 public class RouteEntity extends BaseEntity {
 
+	@OneToOne(cascade = CascadeType.ALL)
+	private BoundingBoxEntity boundingBox;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
 	private Set<GeoPointEntity> path = new LinkedHashSet<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
@@ -108,7 +111,14 @@ public class RouteEntity extends BaseEntity {
 			point.setRoute(this);
 		}
 		this.path = path;
-		
+	}
+	
+	public BoundingBoxEntity getBoundingBox() {
+		return boundingBox;
+	}
+
+	public void setBoundingBox(BoundingBoxEntity boundingBox) {
+		this.boundingBox = boundingBox;
 	}
 
 	@Override

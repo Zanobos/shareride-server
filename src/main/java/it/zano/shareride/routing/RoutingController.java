@@ -12,6 +12,7 @@ import com.graphhopper.directions.api.client.model.ResponseCoordinatesArray;
 import com.graphhopper.directions.api.client.model.RouteResponse;
 import com.graphhopper.directions.api.client.model.RouteResponsePath;
 
+import it.zano.shareride.persistence.entities.BoundingBoxEntity;
 import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
@@ -70,6 +71,7 @@ public class RoutingController {
 		    RouteResponsePath routeResponsePath = routeResponse.getPaths().get(0);
 		    ResponseCoordinatesArray coordinates = routeResponsePath.getPoints().getCoordinates();
 		    
+		    int index = 1;
 		    for(List<?> coordinate : coordinates){
 		    	
 		    	GeoPointEntity point = new GeoPointEntity();
@@ -77,11 +79,27 @@ public class RoutingController {
 		    	Double lon = (Double) coordinate.get(0);
 		    	Double lat = (Double) coordinate.get(1);
 		    	
+		    	point.setPosition(index++);
 		    	point.setLatitude(lat);
 		    	point.setLongitude(lon);
 		    	
 		    	routingResponse.getPoints().add(point);
 		    }
+		    
+		    List<Double> bbox = routeResponsePath.getBbox();
+		    BoundingBoxEntity boundingBox = new BoundingBoxEntity();
+		    
+		    GeoPointEntity minimum = new GeoPointEntity();
+		    minimum.setLongitude(bbox.get(0));
+		    minimum.setLatitude(bbox.get(1));
+		    boundingBox.setMinimum(minimum);
+		    
+		    GeoPointEntity maximum = new GeoPointEntity();
+		    maximum.setLongitude(bbox.get(2));
+		    maximum.setLatitude(bbox.get(3));
+		    boundingBox.setMaximum(maximum);
+		    
+		    routingResponse.setBoundingBox(boundingBox);
 		    
 		} catch (ApiException e) {
 			log.log(Level.SEVERE, "Routing failed: " + e.getMessage() + e.getResponseBody() != null ? e.getResponseBody() : "", e);
