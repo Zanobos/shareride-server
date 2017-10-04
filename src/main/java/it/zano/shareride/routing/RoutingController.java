@@ -65,10 +65,12 @@ public class RoutingController {
 		    log.log(Level.FINE, "INBOUND:<<" + routeResponse.toString() + ">>");
 		    
 		    routingResponse = new RoutingResponse();
-		    routingResponse.setPoints(new LinkedHashSet<GeoPointEntity>());
 		    
 		    //I get the first path
 		    RouteResponsePath routeResponsePath = routeResponse.getPaths().get(0);
+		    
+		    //Path
+		    routingResponse.setPoints(new LinkedHashSet<GeoPointEntity>());
 		    ResponseCoordinatesArray coordinates = routeResponsePath.getPoints().getCoordinates();
 		    
 		    int index = 1;
@@ -86,6 +88,26 @@ public class RoutingController {
 		    	routingResponse.getPoints().add(point);
 		    }
 		    
+		    //Waypoints
+		    routingResponse.setWaypoints(new LinkedHashSet<GeoPointEntity>());
+		    ResponseCoordinatesArray snappedWaypoints = routeResponsePath.getSnappedWaypoints().getCoordinates();
+		    
+		    index = 1;
+		    for(List<?> coordinate : snappedWaypoints){
+		    	
+		    	GeoPointEntity point = new GeoPointEntity();
+		    	//From docs, they are inverted...
+		    	Double lon = (Double) coordinate.get(0);
+		    	Double lat = (Double) coordinate.get(1);
+		    	
+		    	point.setPosition(index++);
+		    	point.setLatitude(lat);
+		    	point.setLongitude(lon);
+		    	
+		    	routingResponse.getWaypoints().add(point);
+		    }
+		    
+		    //Bounding box
 		    List<Double> bbox = routeResponsePath.getBbox();
 		    BoundingBoxEntity boundingBox = new BoundingBoxEntity();
 		    

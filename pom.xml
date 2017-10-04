@@ -121,18 +121,16 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>${tomcat7-maven-plugin.version}</version>
-				
 				<configuration>
 					<server>LocalServer</server>
 					<url>http://localhost:8080/manager/text</url>
 				</configuration>
-				
-				 <!-- 
+				<!--  
 				<configuration>
 					<server>RemoteServer</server>
 					<url>http://94.177.214.113:8080/manager/text</url>
 				</configuration>
-				 -->
+				-->
 			</plugin>
 		</plugins>
 	</build>

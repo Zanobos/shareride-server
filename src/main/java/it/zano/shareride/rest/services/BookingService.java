@@ -57,7 +57,7 @@ public class BookingService extends BaseService {
 		RouteOptimizationController routeOptimizationController = new RouteOptimizationController();
 		
 		//Load from the db the previous requests of the same day
-		LocalDate date = BookingServiceUtils.getDate(checkPathRequest);
+		LocalDate date = checkPathRequest.getDelivery().getDate();
 		List<UserRequestEntity> previousRequests = persistenceController.loadPreviousRequests(date);
 		
 		//Load from the db the vehicles

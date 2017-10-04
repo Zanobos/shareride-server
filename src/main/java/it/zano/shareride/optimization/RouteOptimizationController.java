@@ -24,9 +24,11 @@ import com.graphhopper.directions.api.client.model.Algorithm;
 import com.graphhopper.directions.api.client.model.Algorithm.ObjectiveEnum;
 import com.graphhopper.directions.api.client.model.Algorithm.ProblemTypeEnum;
 import com.graphhopper.directions.api.client.model.JobId;
+import com.graphhopper.directions.api.client.model.ModelConfiguration;
 import com.graphhopper.directions.api.client.model.Request;
 import com.graphhopper.directions.api.client.model.Response;
 import com.graphhopper.directions.api.client.model.Route;
+import com.graphhopper.directions.api.client.model.Routing;
 import com.graphhopper.directions.api.client.model.Shipment;
 import com.graphhopper.directions.api.client.model.SolutionUnassigned;
 import com.graphhopper.directions.api.client.model.Stop;
@@ -54,6 +56,7 @@ public class RouteOptimizationController {
 	private static final Logger log = Logger.getLogger(RouteOptimizationController.class.getName());
 	
 	private static final long MILLIS_IN_SECOND = 1000l;
+	private static final int SECONDS_IN_MINUTE = 60;
 	
 	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
 
@@ -190,6 +193,13 @@ public class RouteOptimizationController {
 		List<Shipment> shipments = convertShipments(routeDoabilityRequest.getRequests());
 		request.setShipments(shipments);
 
+		ModelConfiguration _configuration = new ModelConfiguration();
+		Routing routing = new Routing();
+		boolean calcPoints = PropertiesLoader.getPropertyBoolean("routeoptimization.calculate.route"); //In order to directly calculate the geometry
+		routing.setCalcPoints(calcPoints);
+		_configuration.setRouting(routing);
+		request.setConfiguration(_configuration);
+		
 		return request;
 	}
 
@@ -254,11 +264,14 @@ public class RouteOptimizationController {
 
 		Long seconds = convertTime(time);
 		
+		int windowPickup = PropertiesLoader.getPropertyInt("routeoptimization.window.pickup.minute") * SECONDS_IN_MINUTE;
+		int windowDelivery = PropertiesLoader.getPropertyInt("routeoptimization.window.delivery.minute") * SECONDS_IN_MINUTE; 
+		
 		if(pickup) {
 			timeWindow.setEarliest(seconds);
-			timeWindow.setLatest(seconds + 60 * 15);
+			timeWindow.setLatest(seconds + windowPickup);
 		} else {
-			timeWindow.setEarliest(0l); //TODO
+			timeWindow.setEarliest(seconds - windowDelivery); 
 			timeWindow.setLatest(seconds);
 		}
 		return timeWindow;

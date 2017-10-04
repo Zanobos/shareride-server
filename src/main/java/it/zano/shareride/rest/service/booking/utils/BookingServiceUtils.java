@@ -31,26 +31,8 @@ import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 
 public class BookingServiceUtils {
-
-	public static LocalDate getDate(CheckPathRequest request) {
-		
-		LocalDate result = request.getDelivery().getDate();
-		if(result == null) {
-			result = request.getPickup().getDate();
-		}
-		
-		return result;
-	}
 	
-	public static LocalTime getTime(CheckPathRequest request) {
-		
-		LocalTime result = request.getDelivery().getTime();
-		if(result == null) {
-			result = request.getPickup().getTime();
-		}
-		
-		return result;
-	}
+	private static final int MAX_ROUTE_DURATION_MINUTES = 30;
 
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
@@ -60,24 +42,43 @@ public class BookingServiceUtils {
 		
 		UserRequestEntity userRequest = new UserRequestEntity();
 		
+		//TODO the FE should pass also the time not selected?
+		setMissingTime(request);
+		
 		enrichLocation(request.getDelivery());
 		enrichLocation(request.getPickup());
 		
 		userRequest.setAreaId(request.getAdditionalInfo().getAreaId());
-		userRequest.setLocalDate(getDate(request));
-		userRequest.setLocalTime(getTime(request));
+		userRequest.setLocalDate(LocalDate.now());
+		userRequest.setLocalTime(LocalTime.now());
 		userRequest.setNeedAssistance(request.getAdditionalInfo().getNeedAssistance());
 		userRequest.setNumberOfSeats(request.getAdditionalInfo().getNumberOfSeats());
 		userRequest.setUserName(request.getUserInfo().getName());
 		userRequest.setUserId(request.getUserInfo().getUserId());
-		userRequest.setDelivery(convertLocation(request.getDelivery()));
-		userRequest.setPickup(convertLocation(request.getPickup()));
+		userRequest.setDelivery(convertLocation(request.getDelivery(),userRequest));
+		userRequest.setPickup(convertLocation(request.getPickup(),userRequest));
 		userRequest.setStatus(EnumStatus.TOBEDONE);
 		
 		return userRequest;
 	}
 
-	private static LocationEntity convertLocation(Location location) {
+	private static void setMissingTime(CheckPathRequest request) {
+		
+		LocalTime deliveryTime = request.getDelivery().getTime();
+		LocalTime pickupTime = request.getPickup().getTime();
+		
+		if(pickupTime == null && deliveryTime != null) {
+			pickupTime = deliveryTime.minusMinutes(MAX_ROUTE_DURATION_MINUTES);
+			request.getPickup().setTime(pickupTime);
+		}
+		
+		if(pickupTime != null && deliveryTime == null) {
+			deliveryTime = pickupTime.plusMinutes(MAX_ROUTE_DURATION_MINUTES);
+			request.getDelivery().setTime(deliveryTime);
+		}
+	}
+
+	private static LocationEntity convertLocation(Location location, UserRequestEntity request) {
 		LocationEntity locationEntity = new LocationEntity();
 		
 		locationEntity.setAddress(location.getAddress());
@@ -217,7 +218,7 @@ public class BookingServiceUtils {
 		location.setLat(locationEntity.getLat());
 		location.setLocationName(locationEntity.getLocationName());
 		location.setLon(locationEntity.getLon());
-		location.setTime(routeLocationEntity.getArrivalTime());
+		location.setTime(routeLocationEntity.getEndTime());
 		
 		return location;
 	}
