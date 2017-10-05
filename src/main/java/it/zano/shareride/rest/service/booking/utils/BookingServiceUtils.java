@@ -149,7 +149,7 @@ public class BookingServiceUtils {
 			
 			LocationEntity delivery = requestEntity.getDelivery();
 			Location askedDevilery = convertLocationEntity(delivery);
-			userRequest.setAskedDevilery(askedDevilery);
+			userRequest.setAskedDelivery(askedDevilery);
 			
 			LocationEntity pickup = requestEntity.getPickup();
 			Location askedPickup =  convertLocationEntity(pickup);
@@ -182,7 +182,9 @@ public class BookingServiceUtils {
 						//A loop over the waypoints in order to add infos to the points
 						for(WayPointEntity waypoint : waypoints) {
 							if(waypoint.getGeoPoint().equals(geoPointEntity)){
-								point.setType(waypoint.getLocationType());
+								if(point.getType() == null){
+									point.setType(waypoint.getLocationType());
+								}
 								//If the request id in the waypoint is the same of this request, it's a point of interest
 								if(waypoint.getRequestId().equals(requestId) && waypoint.getLocationType().equals(EnumRouteLocationType.PICKUPSHIPMENT)){
 									positionPickup = point.getPosition();

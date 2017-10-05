@@ -36,12 +36,12 @@ public class UserRequest {
 		this.proposedPickup = proposedPickup;
 	}
 
-	public Location getAskedDevilery() {
+	public Location getAskedDelivery() {
 		return askedDelivery;
 	}
 
-	public void setAskedDevilery(Location askedDevilery) {
-		this.askedDelivery = askedDevilery;
+	public void setAskedDelivery(Location askedDelivery) {
+		this.askedDelivery = askedDelivery;
 	}
 
 	public Location getProposedDelivery() {
