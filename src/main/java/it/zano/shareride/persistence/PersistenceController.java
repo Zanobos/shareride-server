@@ -33,6 +33,7 @@ public class PersistenceController {
 	public static final String USER_REQUESTS_ROUTES = "USER_REQUESTS_ROUTES";
 	public static final String GEO_POINTS = "GEO_POINTS";
 	public static final String BOUNDING_BOXES = "BOUNDING_BOXES";
+	public static final String WAY_POINTS = "WAY_POINTS";
 	
 	private static PersistenceController instance;
 	private static final Logger log = Logger.getLogger(PersistenceController.class.getName());
@@ -356,6 +357,7 @@ public class PersistenceController {
 		startAddress.setLat(45.076108);
 		startAddress.setLon(7.688482);
 		startAddress.setLocationName("Autorimessa");
+		startAddress.setRequestId("DEPOSITO");
 		vehicle.setStartAddress(startAddress);
 		session.save(vehicle);
 		

@@ -15,6 +15,7 @@ import com.graphhopper.directions.api.client.model.RouteResponsePath;
 import it.zano.shareride.persistence.entities.BoundingBoxEntity;
 import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
+import it.zano.shareride.persistence.entities.WayPointEntity;
 import it.zano.shareride.rest.service.exception.ApplicationException;
 import it.zano.shareride.routing.io.RoutingRequest;
 import it.zano.shareride.routing.io.RoutingResponse;
@@ -76,35 +77,29 @@ public class RoutingController {
 		    int index = 1;
 		    for(List<?> coordinate : coordinates){
 		    	
-		    	GeoPointEntity point = new GeoPointEntity();
-		    	//From docs, they are inverted...
-		    	Double lon = (Double) coordinate.get(0);
-		    	Double lat = (Double) coordinate.get(1);
-		    	
-		    	point.setPosition(index++);
-		    	point.setLatitude(lat);
-		    	point.setLongitude(lon);
+		    	GeoPointEntity point = convertGeoPoint(coordinate,index++);
 		    	
 		    	routingResponse.getPoints().add(point);
 		    }
 		    
 		    //Waypoints
-		    routingResponse.setWaypoints(new LinkedHashSet<GeoPointEntity>());
+		    routingResponse.setWaypoints(new LinkedHashSet<WayPointEntity>());
 		    ResponseCoordinatesArray snappedWaypoints = routeResponsePath.getSnappedWaypoints().getCoordinates();
 		    
-		    index = 1;
+		    index = 0;
 		    for(List<?> coordinate : snappedWaypoints){
 		    	
-		    	GeoPointEntity point = new GeoPointEntity();
-		    	//From docs, they are inverted...
-		    	Double lon = (Double) coordinate.get(0);
-		    	Double lat = (Double) coordinate.get(1);
+		    	//I assume snappedWaypoints and routeLocations are still in the same order
+		    	RouteLocationEntity routeLocationEntity = routeLocations.get(index);
 		    	
-		    	point.setPosition(index++);
-		    	point.setLatitude(lat);
-		    	point.setLongitude(lon);
+		    	GeoPointEntity geoPoint = convertGeoPoint(coordinate,++index);
 		    	
-		    	routingResponse.getWaypoints().add(point);
+		    	WayPointEntity waypoint = new WayPointEntity();
+		    	waypoint.setGeoPoint(geoPoint);
+		    	waypoint.setRequestId(routeLocationEntity.getLocationEntity().getRequestId());
+		    	waypoint.setLocationType(routeLocationEntity.getRouteLocationType());
+		    	
+		    	routingResponse.getWaypoints().add(waypoint);
 		    }
 		    
 		    //Bounding box
@@ -147,6 +142,19 @@ public class RoutingController {
 		}
 		
 		return points;
+	}
+	
+	private GeoPointEntity convertGeoPoint(List<?> coordinate, int position) {
+		GeoPointEntity point = new GeoPointEntity();
+		// From docs, they are inverted...
+		Double lon = (Double) coordinate.get(0);
+		Double lat = (Double) coordinate.get(1);
+
+		point.setPosition(position);
+		point.setLatitude(lat);
+		point.setLongitude(lon);
+
+		return point;
 	}
 
 }

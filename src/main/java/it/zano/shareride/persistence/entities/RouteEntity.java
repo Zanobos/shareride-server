@@ -24,6 +24,8 @@ import it.zano.shareride.utils.EnumRouteStatus;
 @Table(name = PersistenceController.ROUTES)
 public class RouteEntity extends BaseEntity {
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
+	private Set<WayPointEntity> wayPoints = new LinkedHashSet<>();
 	@OneToOne(cascade = CascadeType.ALL)
 	private BoundingBoxEntity boundingBox;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "route", orphanRemoval = true,fetch = FetchType.EAGER)
@@ -119,6 +121,17 @@ public class RouteEntity extends BaseEntity {
 
 	public void setBoundingBox(BoundingBoxEntity boundingBox) {
 		this.boundingBox = boundingBox;
+	}
+	
+	public Set<WayPointEntity> getWayPoints() {
+		return wayPoints;
+	}
+
+	public void setWayPoints(Set<WayPointEntity> wayPoints) {
+		for(WayPointEntity waypoint : wayPoints) {
+			waypoint.setRoute(this);
+		}
+		this.wayPoints = wayPoints;
 	}
 
 	@Override

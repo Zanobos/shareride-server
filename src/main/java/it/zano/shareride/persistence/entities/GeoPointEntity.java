@@ -49,6 +49,11 @@ public class GeoPointEntity extends BaseEntity {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		return this.latitude.equals(((GeoPointEntity)obj).latitude) && this.longitude.equals(((GeoPointEntity)obj).longitude);
+	}
+
+	@Override
 	public String toString() {
 		return "GeoPointEntity [position=" + position + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}

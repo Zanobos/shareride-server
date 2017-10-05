@@ -43,6 +43,7 @@
 		<mapping class="it.zano.shareride.persistence.entities.UserRequestEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.RouteLocationEntity"/>
 		<mapping class="it.zano.shareride.persistence.entities.RouteEntity"/>
+		<mapping class="it.zano.shareride.persistence.entities.WayPointEntity"/>
 		
     </session-factory>
 

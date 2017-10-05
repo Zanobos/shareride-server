@@ -5,11 +5,12 @@ import java.util.Set;
 
 import it.zano.shareride.persistence.entities.BoundingBoxEntity;
 import it.zano.shareride.persistence.entities.GeoPointEntity;
+import it.zano.shareride.persistence.entities.WayPointEntity;
 
 public class RoutingResponse {
 
 	private Set<GeoPointEntity> points;
-	private Set<GeoPointEntity> waypoints;
+	private Set<WayPointEntity> waypoints;
 	private BoundingBoxEntity boundingBox;
 
 	public Set<GeoPointEntity> getPoints() {
@@ -28,11 +29,11 @@ public class RoutingResponse {
 		this.boundingBox = boundingBox;
 	}
 	
-	public Set<GeoPointEntity> getWaypoints() {
+	public Set<WayPointEntity> getWaypoints() {
 		return waypoints;
 	}
 
-	public void setWaypoints(Set<GeoPointEntity> waypoints) {
+	public void setWaypoints(Set<WayPointEntity> waypoints) {
 		this.waypoints = waypoints;
 	}
 

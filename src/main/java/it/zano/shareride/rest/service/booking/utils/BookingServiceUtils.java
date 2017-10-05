@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -21,12 +22,14 @@ import it.zano.shareride.persistence.entities.LocationEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.RouteLocationEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
+import it.zano.shareride.persistence.entities.WayPointEntity;
 import it.zano.shareride.rest.service.booking.entities.BoundingBox;
 import it.zano.shareride.rest.service.booking.entities.GeoPoint;
 import it.zano.shareride.rest.service.booking.entities.Location;
 import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
 import it.zano.shareride.rest.service.exception.ApplicationException;
+import it.zano.shareride.utils.EnumRouteLocationType;
 import it.zano.shareride.utils.EnumRouteStatus;
 import it.zano.shareride.utils.EnumStatus;
 
@@ -55,8 +58,8 @@ public class BookingServiceUtils {
 		userRequest.setNumberOfSeats(request.getAdditionalInfo().getNumberOfSeats());
 		userRequest.setUserName(request.getUserInfo().getName());
 		userRequest.setUserId(request.getUserInfo().getUserId());
-		userRequest.setDelivery(convertLocation(request.getDelivery(),userRequest));
-		userRequest.setPickup(convertLocation(request.getPickup(),userRequest));
+		userRequest.setDelivery(convertLocation(request.getDelivery()));
+		userRequest.setPickup(convertLocation(request.getPickup()));
 		userRequest.setStatus(EnumStatus.TOBEDONE);
 		
 		return userRequest;
@@ -78,7 +81,7 @@ public class BookingServiceUtils {
 		}
 	}
 
-	private static LocationEntity convertLocation(Location location, UserRequestEntity request) {
+	private static LocationEntity convertLocation(Location location) {
 		LocationEntity locationEntity = new LocationEntity();
 		
 		locationEntity.setAddress(location.getAddress());
@@ -141,7 +144,8 @@ public class BookingServiceUtils {
 		for(UserRequestEntity requestEntity : previousRequests){
 			UserRequest userRequest = new UserRequest();
 			
-			userRequest.setRequestId(requestEntity.getId());
+			String requestId = requestEntity.getId();
+			userRequest.setRequestId(requestId);
 			
 			LocationEntity delivery = requestEntity.getDelivery();
 			Location askedDevilery = convertLocationEntity(delivery);
@@ -155,6 +159,10 @@ public class BookingServiceUtils {
 			RouteLocationEntity proposedPickupEntity = null;
 			for(RouteEntity route : requestEntity.getRoutes()){
 				if(route.getRouteStatus().equals(EnumRouteStatus.PLANNED)) {
+					
+					//Getting the waypoints for further use
+					Set<WayPointEntity> waypoints = route.getWayPoints();
+					
 					//Getting the right locations
 					for(RouteLocationEntity routeLocation : route.getRouteLocations()){
 						if(routeLocation.getLocationEntity().getId().equals(delivery.getId())){
@@ -163,12 +171,30 @@ public class BookingServiceUtils {
 							proposedPickupEntity = routeLocation;
 						}
 					}
-					userRequest.setPath(new ArrayList<GeoPoint>());
+					
 					//Getting the path
+					//I assume the interested path is continue between pickup and delivery
+					Integer positionPickup = null;
+					Integer positionDelivery = null;
+					userRequest.setPath(new ArrayList<GeoPoint>());
 					for(GeoPointEntity geoPointEntity : route.getPath()){
 						GeoPoint point = convertGeoPointEntity(geoPointEntity);
+						//A loop over the waypoints in order to add infos to the points
+						for(WayPointEntity waypoint : waypoints) {
+							if(waypoint.getGeoPoint().equals(geoPointEntity)){
+								point.setType(waypoint.getLocationType());
+								//If the request id in the waypoint is the same of this request, it's a point of interest
+								if(waypoint.getRequestId().equals(requestId) && waypoint.getLocationType().equals(EnumRouteLocationType.PICKUPSHIPMENT)){
+									positionPickup = point.getPosition();
+								}
+								else if(waypoint.getRequestId().equals(requestId) && waypoint.getLocationType().equals(EnumRouteLocationType.DELIVERSHIPMENT)){
+									positionDelivery = point.getPosition();
+								}
+							}
+						}
 						userRequest.getPath().add(point);
 					}
+					
 					// putting in the right position the points
 					Collections.sort(userRequest.getPath(), new Comparator<GeoPoint>() {
 						@Override
@@ -176,6 +202,16 @@ public class BookingServiceUtils {
 							return point1.getPosition().compareTo(point2.getPosition());
 						}
 					});
+					
+					//I mark the part of the path I will be on the bus
+					if(positionPickup != null && positionDelivery != null) {
+						for(GeoPoint geoPoint : userRequest.getPath()){
+							if(geoPoint.getPosition() >= positionPickup && geoPoint.getPosition() <= positionDelivery) {
+								geoPoint.setUserPath(true);
+							}
+						}
+					}
+					
 					//Getting the bounding box
 					BoundingBoxEntity boundingBoxEntity = route.getBoundingBox();
 					BoundingBox boundingBox = new BoundingBox();
@@ -188,7 +224,7 @@ public class BookingServiceUtils {
 			
 			Location proposedDevilery = convertRouteLocationEntity(proposedDevileryEntity);
 			Location proposedPickup = convertRouteLocationEntity(proposedPickupEntity);
-			userRequest.setProposedDevilery(proposedDevilery);
+			userRequest.setProposedDelivery(proposedDevilery);
 			userRequest.setProposedPickup(proposedPickup);
 			
 			requestMap.put(userRequest.getRequestId(), userRequest);

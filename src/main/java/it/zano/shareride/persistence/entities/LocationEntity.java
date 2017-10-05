@@ -21,7 +21,8 @@ public class LocationEntity extends BaseEntity {
 	private LocalDate date;
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalTime")
 	private LocalTime time;
-
+	private String requestId;
+	
 	public String getLocationName() {
 		return locationName;
 	}
@@ -68,6 +69,14 @@ public class LocationEntity extends BaseEntity {
 
 	public void setTime(LocalTime time) {
 		this.time = time;
+	}
+	
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import it.zano.shareride.persistence.entities.GeoPointEntity;
 import it.zano.shareride.persistence.entities.RouteEntity;
 import it.zano.shareride.persistence.entities.UserRequestEntity;
 import it.zano.shareride.persistence.entities.VehicleEntity;
+import it.zano.shareride.persistence.entities.WayPointEntity;
 import it.zano.shareride.rest.service.base.BaseService;
 import it.zano.shareride.rest.service.booking.entities.UserRequest;
 import it.zano.shareride.rest.service.booking.io.CheckPathRequest;
@@ -82,6 +83,8 @@ public class BookingService extends BaseService {
 		
 		//Updating the status
 		newRequest.setStatus(status);
+		newRequest.getDelivery().setRequestId(requestId);
+		newRequest.getPickup().setRequestId(requestId);
 		persistenceController.updateRequest(newRequest);
 		
 		String routeId = null;
@@ -106,8 +109,11 @@ public class BookingService extends BaseService {
 			//Assegno il path alla rotta, e faccio l'update in sessione
 			Set<GeoPointEntity> path = routingResponse.getPoints();
 			BoundingBoxEntity boundingBox = routingResponse.getBoundingBox();
+			Set<WayPointEntity> waypoints = routingResponse.getWaypoints();
+			
 			routeEntity.setBoundingBox(boundingBox);
 			routeEntity.setPath(path);
+			routeEntity.setWayPoints(waypoints);
 			persistenceController.updateRoute(routeEntity);
 			
 			//E alla rotta assegno tutte le request
