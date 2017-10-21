@@ -37,6 +37,10 @@ public class BookingServiceUtils {
 	
 	private static final int MAX_ROUTE_DURATION_MINUTES = 30;
 
+	private BookingServiceUtils() {
+		//Impossible to instantiate
+	}
+	
 	/**
 	 * @return the request just inserted, enriching as needed (for example, maybe I have to geolocate lat and lon)
 	 * @throws ApplicationException 
@@ -139,7 +143,7 @@ public class BookingServiceUtils {
 
 	public static Map<String, UserRequest> convertRequestList(List<UserRequestEntity> previousRequests) {
 		
-		Map<String,UserRequest> requestMap = new HashMap<String,UserRequest>();
+		Map<String,UserRequest> requestMap = new HashMap<>();
 		
 		for(UserRequestEntity requestEntity : previousRequests){
 			UserRequest userRequest = new UserRequest();

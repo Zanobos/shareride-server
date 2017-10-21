@@ -30,7 +30,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 		
 		//If this is already a WebApplicationException, just return it
 		if (ex instanceof WebApplicationException) {
-			WebApplicationException webExc = ((WebApplicationException) ex);
+			WebApplicationException webExc = (WebApplicationException) ex;
 			log.log(Level.SEVERE, webExc.getResponse().toString(), ex);
 			return webExc.getResponse();
 		} 

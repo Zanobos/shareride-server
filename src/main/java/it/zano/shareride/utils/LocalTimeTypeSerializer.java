@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class LocalTimeTypeSerializer extends JsonSerializer<LocalTime> {
 
-	private static DateTimeFormatter TIME_FORMAT = ISODateTimeFormat.timeNoMillis();
+	private static final DateTimeFormatter TIME_FORMAT = ISODateTimeFormat.timeNoMillis();
 
 	@Override
 	public void serialize(LocalTime value, JsonGenerator gen, SerializerProvider serializers)

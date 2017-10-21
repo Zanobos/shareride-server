@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class LocalDateTypeSerializer extends JsonSerializer<LocalDate> {
 
-	private static DateTimeFormatter DATE_FORMAT = ISODateTimeFormat.date();
+	private static final DateTimeFormatter DATE_FORMAT = ISODateTimeFormat.date();
 
 	@Override
 	public void serialize(LocalDate value, JsonGenerator gen, SerializerProvider serializers)

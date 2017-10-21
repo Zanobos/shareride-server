@@ -55,7 +55,7 @@ public class RouteOptimizationController {
 
 	private static final Logger log = Logger.getLogger(RouteOptimizationController.class.getName());
 	
-	private static final long MILLIS_IN_SECOND = 1000l;
+	private static final long MILLIS_IN_SECOND = 1000L;
 	private static final int SECONDS_IN_MINUTE = 60;
 	
 	public RouteDoabilityResponse assessDoability(RouteDoabilityRequest request) throws ApplicationException, InterruptedException {
@@ -111,7 +111,7 @@ public class RouteOptimizationController {
 			routeStatus = EnumRouteStatus.PROPOSED;
 		}
 		
-		List<RouteEntity> routes = new ArrayList<RouteEntity>();
+		List<RouteEntity> routes = new ArrayList<>();
 		
 		for(Route route : response.getSolution().getRoutes()){
 			RouteEntity routeEntity = new RouteEntity();
@@ -136,10 +136,8 @@ public class RouteOptimizationController {
 
 				@Override
 				public int compare(RouteLocationEntity location1, RouteLocationEntity location2) {
-					
 					EnumRouteLocationType type1 = location1.getRouteLocationType();
 					EnumRouteLocationType type2 = location2.getRouteLocationType();
-					
 					if(type1 == EnumRouteLocationType.START){
 						return -1;
 					}
@@ -152,13 +150,10 @@ public class RouteOptimizationController {
 					if(type2 == EnumRouteLocationType.END) {
 						return -1;
 					}
-					
 					//If I arrive here, both start and end time are not null
 					LocalTime arrivalTime1 = location1.getArrivalTime();
 					LocalTime arrivalTime2 = location2.getArrivalTime();
-					
 					return arrivalTime1.compareTo(arrivalTime2);
-					
 				}
 				
 			});
@@ -173,8 +168,7 @@ public class RouteOptimizationController {
 	}
 
 	private EnumRouteLocationType convertActivityType(TypeEnum type) {
-		EnumRouteLocationType locationType = EnumRouteLocationType.valueOf(type.name());
-		return locationType;
+		return EnumRouteLocationType.valueOf(type.name());
 	}
 
 	private Request convertRequest(RouteDoabilityRequest routeDoabilityRequest) {
@@ -193,12 +187,12 @@ public class RouteOptimizationController {
 		List<Shipment> shipments = convertShipments(routeDoabilityRequest.getRequests());
 		request.setShipments(shipments);
 
-		ModelConfiguration _configuration = new ModelConfiguration();
+		ModelConfiguration configuration = new ModelConfiguration();
 		Routing routing = new Routing();
 		boolean calcPoints = PropertiesLoader.getPropertyBoolean("routeoptimization.calculate.route"); //In order to directly calculate the geometry
 		routing.setCalcPoints(calcPoints);
-		_configuration.setRouting(routing);
-		request.setConfiguration(_configuration);
+		configuration.setRouting(routing);
+		request.setConfiguration(configuration);
 		
 		return request;
 	}
