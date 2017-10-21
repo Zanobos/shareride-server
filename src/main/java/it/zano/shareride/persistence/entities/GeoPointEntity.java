@@ -50,12 +50,27 @@ public class GeoPointEntity extends BaseEntity {
 
 	@Override
 	public boolean equals(Object obj) {
-		return this.latitude.equals(((GeoPointEntity)obj).latitude) && this.longitude.equals(((GeoPointEntity)obj).longitude);
+		if(obj == null){
+			return false;
+		}
+		if (getClass() != obj.getClass())
+			return false;
+		GeoPointEntity other = (GeoPointEntity) obj;
+		return this.latitude.equals(other.latitude) && this.longitude.equals(other.longitude);
 	}
 
 	@Override
 	public String toString() {
 		return "GeoPointEntity [position=" + position + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((latitude == null) ? 0 : latitude.hashCode());
+		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
+		return result;
 	}
 
 }

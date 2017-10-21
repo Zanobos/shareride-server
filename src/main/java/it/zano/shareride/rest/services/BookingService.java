@@ -95,34 +95,38 @@ public class BookingService extends BaseService {
 			
 			//Prendo la prima rotta
 			RouteEntity routeEntity = routes.isEmpty() ? null : routes.get(0);
-			//salvo la rotta
-			persistenceController.saveRoute(routeEntity); 
 			
-			//Preparo il controller
-			RoutingController routingController = new RoutingController();
-			
-			//Calcolo l'effettivo path da fare
-			RoutingRequest routingRequest = new RoutingRequest();
-			routingRequest.setRouteLocations(routeEntity.getRouteLocations());
-			RoutingResponse routingResponse = routingController.calculateRoutePath(routingRequest);
-			
-			//Assegno il path alla rotta, e faccio l'update in sessione
-			Set<GeoPointEntity> path = routingResponse.getPoints();
-			BoundingBoxEntity boundingBox = routingResponse.getBoundingBox();
-			Set<WayPointEntity> waypoints = routingResponse.getWaypoints();
-			
-			routeEntity.setBoundingBox(boundingBox);
-			routeEntity.setPath(path);
-			routeEntity.setWayPoints(waypoints);
-			persistenceController.updateRoute(routeEntity);
-			
-			//E alla rotta assegno tutte le request
-			for(UserRequestEntity userRequest : previousRequests){
-				routeEntity.addUserRequest(userRequest);
-				persistenceController.updateRequest(userRequest);
+			if(routeEntity != null) {
+				
+				//salvo la rotta
+				persistenceController.saveRoute(routeEntity); 
+				
+				//Preparo il controller
+				RoutingController routingController = new RoutingController();
+				
+				//Calcolo l'effettivo path da fare
+				RoutingRequest routingRequest = new RoutingRequest();
+				routingRequest.setRouteLocations(routeEntity.getRouteLocations());
+				RoutingResponse routingResponse = routingController.calculateRoutePath(routingRequest);
+				
+				//Assegno il path alla rotta, e faccio l'update in sessione
+				Set<GeoPointEntity> path = routingResponse.getPoints();
+				BoundingBoxEntity boundingBox = routingResponse.getBoundingBox();
+				Set<WayPointEntity> waypoints = routingResponse.getWaypoints();
+				
+				routeEntity.setBoundingBox(boundingBox);
+				routeEntity.setPath(path);
+				routeEntity.setWayPoints(waypoints);
+				persistenceController.updateRoute(routeEntity);
+				
+				//E alla rotta assegno tutte le request
+				for(UserRequestEntity userRequest : previousRequests){
+					routeEntity.addUserRequest(userRequest);
+					persistenceController.updateRequest(userRequest);
+				}
+				
+				routeId = routeEntity.getId(); //It can be null
 			}
-			
-			routeId = routeEntity.getId(); //It can be null
 		}
 		
 		//Preparing the response
