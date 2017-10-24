@@ -1,7 +1,5 @@
 package it.zano.shareride.rest.service.exception;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,9 +36,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 		errorResponse.setErrorCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		errorResponse.setStatusCode(Constants.StatusCodes.TECHNICAL_ERROR);
 		errorResponse.setStatusMessage(ex.getMessage());
-		StringWriter errorStackTrace = new StringWriter();
-		ex.printStackTrace(new PrintWriter(errorStackTrace));
-		errorResponse.setDeveloperMessage(errorStackTrace.toString());
+		errorResponse.setDeveloperMessage(ex.toString());
 		
 		log.log(Level.SEVERE, errorResponse.toString(), ex);
 		
