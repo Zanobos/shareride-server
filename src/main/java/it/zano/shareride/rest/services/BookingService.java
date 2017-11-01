@@ -144,7 +144,7 @@ public class BookingService extends BaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/confirmRequest")
-	public ConfirmRequestResponse confirmRequest(ConfirmRequestRequest confirmRequest) throws ApplicationException, InterruptedException{
+	public ConfirmRequestResponse confirmRequest(ConfirmRequestRequest confirmRequest) throws ApplicationException {
 		
 		log.log(Level.INFO, "REQUEST:<<" + confirmRequest.toString() + ">>");
 		
@@ -186,7 +186,7 @@ public class BookingService extends BaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/userRequestList")
-	public UserRequestListResponse userRequestList(UserRequestListRequest userRequestListRequest) throws ApplicationException, Exception {
+	public UserRequestListResponse userRequestList(UserRequestListRequest userRequestListRequest) throws ApplicationException {
 		
 		log.log(Level.INFO, "REQUEST:<<" + userRequestListRequest.toString() + ">>");
 		
